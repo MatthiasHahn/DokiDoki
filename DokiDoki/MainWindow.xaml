@@ -13,6 +13,9 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        
+        <Grid.Background>
+            <ImageBrush/>
+        </Grid.Background>
+
     </Grid>
 </Window>
