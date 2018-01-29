@@ -13,6 +13,9 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Images/WP.png"/>
+        </Grid.Background>
         <Label Content="Label" HorizontalAlignment="Left" Margin="58,80,0,0" VerticalAlignment="Top"/>
         
     </Grid>
