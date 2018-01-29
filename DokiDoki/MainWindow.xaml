@@ -5,8 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DokiDoki"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" WindowStyle="None" ResizeMode="NoResize">
+        Title="MainWindow" Height="350" Width="525" WindowStyle="None" ResizeMode="CanResize">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF326AFF" Offset="0"/>
+            <GradientStop Color="#FF486EEE" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
     <Grid>
-        
+
     </Grid>
 </Window>
