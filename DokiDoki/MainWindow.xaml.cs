@@ -24,5 +24,10 @@ namespace DokiDoki
         {
             InitializeComponent();
         }
+
+        private void wnd_main_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
     }
 }
