@@ -33,9 +33,10 @@ namespace DokiDoki
 
         private void img_next_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Rooms rm = new Rooms();
+            Rooms rm = new Rooms();            
             rm.Show();
             Close();
+
         }
 
         private void img_next_MouseEnter(object sender, MouseEventArgs e)
