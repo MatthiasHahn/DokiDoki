@@ -108,5 +108,8 @@
   <ItemGroup>
     <Resource Include="Images\WP.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Logo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
