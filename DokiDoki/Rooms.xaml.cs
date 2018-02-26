@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Net;
+using System.Net.Sockets;
 
 namespace DokiDoki
 {
@@ -26,6 +27,31 @@ namespace DokiDoki
         public Rooms(IPEndPoint Server)
         {
             InitializeComponent();
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Loopback, 8888);
+            socket.Bind(localEndPoint);
+            socket.Connect(Server);
+            socket.Send(new byte[] { 1, 0, 0 });
+            Task.Run(() => {
+                while (true)
+                {
+                    List<byte> arr = new List<byte>();
+                    byte[] buffer = new byte[1600];
+                    while (Encoding.ASCII.GetString(buffer) != "Stop")
+                    {
+                        socket.Receive(buffer);
+                        if (Encoding.ASCII.GetString(buffer) != "stop")
+                            foreach (byte b in buffer)
+                                arr.Add(b);
+                    }
+                    Bitmap bmp;
+                    using(var ms = new MemoryStream(arr.ToArray()))
+                    {
+                        bmp = (Bitmap)Image.FromStream(ms);
+                    }
+                    Display(bmp);
+                }
+            });
         }
 
         public void Display(Bitmap bmp)
