@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,12 @@ namespace DokiDoki_Server
 {
     class Program
     {
+        static Socket socket;
+
         static void Main(string[] args)
         {
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
             string procid = Console.ReadLine();
             Capture(int.Parse(procid));
         }
@@ -40,7 +45,10 @@ namespace DokiDoki_Server
                 }
             });
         }
-
+        private void Send()
+        {
+            
+        }
         [DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
 
