@@ -13,6 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Animation;
+using MySql.Data.MySqlClient;
+using MySql.Data;
+using System.Net.Sockets;
+using System.Net;
 
 namespace DokiDoki
 {
@@ -21,6 +25,8 @@ namespace DokiDoki
     /// </summary>
     public partial class MainWindow : Window
     {
+        public TcpClient client = new TcpClient();
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -33,11 +39,16 @@ namespace DokiDoki
 
         private void img_next_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            string username = tbx_username.Text;
+            string password = passbox.Password;
+            client.Connect(new IPEndPoint(IPAddress.Any, 7777));
             Rooms rm = new Rooms();            
             rm.Show();
             Close();
 
         }
+
+      
 
         private void img_next_MouseEnter(object sender, MouseEventArgs e)
         {

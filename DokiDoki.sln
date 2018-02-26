@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DokiDoki", "DokiDoki\DokiDoki.csproj", "{060B0453-1188-4960-AD9C-D3D11DA7E1EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DokiDoki_Login_Server", "DokiDoki_Login_Server\DokiDoki_Login_Server.csproj", "{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{060B0453-1188-4960-AD9C-D3D11DA7E1EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{060B0453-1188-4960-AD9C-D3D11DA7E1EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{060B0453-1188-4960-AD9C-D3D11DA7E1EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1144EB88-920A-46DE-9BCF-E270DEF45DB4}
 	EndGlobalSection
 EndGlobal
