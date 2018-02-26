@@ -5,22 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DokiDoki"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" WindowStyle="None" ResizeMode="CanResize" MouseDown="wnd_main_MouseDown">
+        Title="MainWindow" Height="211.334" Width="425.667" WindowStyle="None" ResizeMode="NoResize" MouseDown="wnd_main_MouseDown" Foreground="{x:Null}">
     <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#FF326AFF" Offset="0"/>
-            <GradientStop Color="#FF486EEE" Offset="1"/>
-        </LinearGradientBrush>
+        <ImageBrush ImageSource="Images/WP.png"/>
     </Window.Background>
     <Grid>
-        <Grid.Background>
-            <ImageBrush ImageSource="Images/WP.png"/>
-        </Grid.Background>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="58,80,0,0" VerticalAlignment="Top"/>
-        
-        <Label x:Name="lbl_deko_username" Content="Username" HorizontalAlignment="Left" Margin="52,54,0,0" VerticalAlignment="Top" Height="40" Width="130" FontSize="24" Background="{x:Null}" Foreground="White" FontFamily="Arctic" FontWeight="Bold"/>
-        <TextBox x:Name="tbx_username" Margin="82,98,245,214" BorderBrush="{x:Null}" Foreground="White" FontSize="18" FontFamily="Arctic" Background="#4C000000" SelectionBrush="White"/>
-        <Label x:Name="lbl_deko_pass" Content="Password" HorizontalAlignment="Left" Margin="52,142,0,0" VerticalAlignment="Top" Height="40" Width="130" FontSize="24" Background="{x:Null}" Foreground="White" FontFamily="Arctic" FontWeight="Bold"/>
-        <PasswordBox HorizontalAlignment="Left" Margin="82,187,0,0" VerticalAlignment="Top" Width="190" Height="24" BorderBrush="{x:Null}" Background="#4C000000" Foreground="White" SelectionBrush="White" FontSize="14" FontFamily="Arctic"/>
+
+        <Label x:Name="lbl_deko_username" Content="Username" HorizontalAlignment="Left" Margin="21,18,0,0" VerticalAlignment="Top" Height="40" Width="155" FontSize="24" Background="{x:Null}" Foreground="White" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold"/>
+        <TextBox x:Name="tbx_username" Margin="51,58,0,0" BorderBrush="{x:Null}" Foreground="White" FontSize="18" FontFamily="Arctic" SelectionBrush="White" VerticalAlignment="Top" HorizontalAlignment="Left" Width="198" Height="27" Background="#4CFFFFFF"/>
+        <Label x:Name="lbl_deko_pass" Content="Password" HorizontalAlignment="Left" Margin="21,106,0,0" VerticalAlignment="Top" Height="40" Width="144" FontSize="24" Background="{x:Null}" Foreground="White" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold"/>
+        <PasswordBox HorizontalAlignment="Left" Margin="51,146,0,0" VerticalAlignment="Top" Width="198" Height="27" BorderBrush="{x:Null}" Background="#4CFFFFFF" Foreground="White" SelectionBrush="White" FontSize="14" FontFamily="Arctic"/>
+        <Label x:Name="lbl_deko_next" Content="Next" HorizontalAlignment="Left" Margin="346,164,0,0" VerticalAlignment="Top" Height="28" Width="64" FontSize="19" Background="{x:Null}" Foreground="White" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold" Opacity="0.8"/>
+        <Image x:Name="img_next" HorizontalAlignment="Left" Height="51" Margin="288,160,0,0" VerticalAlignment="Top" Width="138" Source="Images/Button_bg.png" Opacity="0.4" MouseDown="img_next_MouseDown" MouseEnter="img_next_MouseEnter" MouseLeave="img_next_MouseLeave"/>        
     </Grid>
 </Window>
