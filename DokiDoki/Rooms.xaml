@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Rooms" Height="300" Width="300">
     <Grid>
-        
+        <Image x:Name="img_disp" HorizontalAlignment="Left" Height="154" Margin="10,10,0,0" VerticalAlignment="Top" Width="272"/>
+
     </Grid>
 </Window>

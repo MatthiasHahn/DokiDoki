@@ -39,10 +39,7 @@ namespace DokiDoki_Server
                     }
                 }
             });
-        }
-
-        [DllImport("gdi32.dll")]
-        public static extern bool DeleteObject(IntPtr hObject);
+        }        
 
         private class User
         {
