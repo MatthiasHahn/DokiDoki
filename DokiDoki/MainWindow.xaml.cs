@@ -34,17 +34,51 @@ namespace DokiDoki
 
         private void wnd_main_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            DragMove();
+           // Diese Kurac löst exception aus wenn die daten flasch sind ------ DragMove();
         }
 
         private void img_next_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            
+            client.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7777));
             string username = tbx_username.Text;
-            string password = passbox.Password;
-            client.Connect(new IPEndPoint(IPAddress.Any, 7777));
-            Rooms rm = new Rooms();            
-            rm.Show();
-            Close();
+            string password = passbox.Password.GetHashCode().ToString();
+            Byte[] data = Encoding.ASCII.GetBytes(username + ";" + password);
+            NetworkStream stream = client.GetStream();
+            stream.Write(data, 0, data.Length);
+            MessageBox.Show("Reqest Sent");
+
+            data = new Byte[256];
+            string responsedata = string.Empty;
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responsedata = Encoding.ASCII.GetString(data, 0, bytes);
+           
+
+            stream.Close();
+            client.Close();
+
+            bool trfr;
+            if(responsedata == "1")
+            {
+                trfr = true;
+            }
+            else
+            {
+                trfr = false;
+            }
+            if(trfr)
+            {
+             Rooms rm = new Rooms();            
+             rm.Show();
+             Close();
+            }
+            else
+            {
+                MessageBox.Show("Please check your username or password");
+                client = new TcpClient();
+                
+            }
+           
 
         }
 
