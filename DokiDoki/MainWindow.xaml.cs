@@ -41,12 +41,16 @@ namespace DokiDoki
         {
             
             client.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7777));
+
+            string salt = "MP1Sfss==";
             string username = tbx_username.Text;
-            string password = passbox.Password.GetHashCode().ToString();
+            string passwordNoP = passbox.Password.GetHashCode().ToString();
+            string pepper = username.Substring(username.Length - 4)+passwordNoP.Substring(passwordNoP.Length - 4);
+            string password = (salt+ passwordNoP + pepper).GetHashCode().ToString();
             Byte[] data = Encoding.ASCII.GetBytes(username + ";" + password);
             NetworkStream stream = client.GetStream();
             stream.Write(data, 0, data.Length);
-            MessageBox.Show("Reqest Sent");
+           
 
             data = new Byte[256];
             string responsedata = string.Empty;
@@ -82,7 +86,13 @@ namespace DokiDoki
 
         }
 
-      
+      private String CreateSalt(int size)
+        {
+            var rng = new System.Security.Cryptography.RNGCryptoServiceProvider();
+            var buffer = new byte[size];
+            rng.GetBytes(buffer);
+            return Convert.ToBase64String(buffer);
+        }
 
         private void img_next_MouseEnter(object sender, MouseEventArgs e)
         {
