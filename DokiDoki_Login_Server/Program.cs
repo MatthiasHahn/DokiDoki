@@ -22,8 +22,10 @@ namespace DokiDoki_Login_Server
         {
             dbconnect();
             Console.WriteLine("Connected");
+
             listen = new TcpListener(IPAddress.Parse("127.0.0.1"), 7777);
             listen.Start();
+
             Byte[] bytes = new Byte[256];
             string data = null;
 
@@ -35,6 +37,7 @@ namespace DokiDoki_Login_Server
                 data = null;
                 NetworkStream stream = client.GetStream();
                 int i;
+
                 while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                 {
                     data = Encoding.ASCII.GetString(bytes, 0, i);
