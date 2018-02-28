@@ -123,7 +123,28 @@ namespace DokiDoki
             lbl_deko_next.BeginAnimation(OpacityProperty, anim2);
         }
 
-        private void passbox_KeyDown(object sender, KeyEventArgs e)
+        private void lbl_deko_noaccount_MouseEnter(object sender, MouseEventArgs e)
+        {
+            DoubleAnimation anim = new DoubleAnimation(0.4, 0.6, TimeSpan.FromSeconds(0.2));
+           
+            lbl_deko_noaccount.BeginAnimation(OpacityProperty, anim);
+        }
+
+        private void lbl_deko_noaccount_MouseLeave(object sender, MouseEventArgs e)
+        {
+            DoubleAnimation anim = new DoubleAnimation(0.6, 0.4, TimeSpan.FromSeconds(0.2));
+          
+            lbl_deko_noaccount.BeginAnimation(OpacityProperty, anim);
+        }
+
+        private void lbl_deko_noaccount_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Register rg = new Register();
+            rg.Show();
+            Close();
+        }
+
+            private void passbox_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Enter)
                 img_next_MouseDown(null, null);

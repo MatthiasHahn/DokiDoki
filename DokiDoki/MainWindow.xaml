@@ -19,5 +19,6 @@
         <Image x:Name="img_next" HorizontalAlignment="Left" Height="51" Margin="288,160,0,0" VerticalAlignment="Top" Width="138" Source="Images/Button_bg.png" Opacity="0.4" MouseDown="img_next_MouseDown" MouseEnter="img_next_MouseEnter" MouseLeave="img_next_MouseLeave"/>
         <Image HorizontalAlignment="Left" Height="136" Margin="280,10,0,0" VerticalAlignment="Top" Width="136" Source="Images/Logo.png"/>
         <Label x:Name="lbl_error_disp" Content="Invalid Input" HorizontalAlignment="Left" Margin="302,130,0,0" VerticalAlignment="Top" Height="30" Width="114" FontSize="15" Background="#4C000000" Foreground="Red" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold" Opacity="0"/>
+        <Label x:Name="lbl_deko_noaccount" Content="Don't have an account yet?" HorizontalAlignment="Left" Margin="51,180,0,0" VerticalAlignment="Top" Height="21" Width="161" MouseEnter="lbl_deko_noaccount_MouseEnter" MouseLeave="lbl_deko_noaccount_MouseLeave" MouseDown="lbl_deko_noaccount_MouseDown" FontSize="10" Background="{x:Null}" Foreground="White" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" Opacity="0.4"/>
     </Grid>
 </Window>
