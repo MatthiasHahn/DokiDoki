@@ -24,6 +24,10 @@ namespace DokiDoki
         {
             InitializeComponent();
         }
+        private void wnd_register_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
 
         private void img_next_reg_MouseEnter(object sender, MouseEventArgs e)
         {
