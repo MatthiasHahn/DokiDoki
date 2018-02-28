@@ -72,7 +72,7 @@ namespace DokiDoki_Login_Server
         {
             conn = "Server=localhost;Database=DokiDoki;Uid=root;Pwd=;";
             connect = new MySqlConnection(conn);
-            //connect.Open();
+            connect.Open();
         }
 
         private static bool validate_login(string user, string pass)

@@ -17,6 +17,7 @@ using MySql.Data.MySqlClient;
 using MySql.Data;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading;
 
 namespace DokiDoki
 {
@@ -34,14 +35,23 @@ namespace DokiDoki
 
         private void wnd_main_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            // Fix this shit please --> DragMove();
+            DragMove();
         }
 
-        private void img_next_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ErrDisp()
         {
+            DoubleAnimation anim = new DoubleAnimation(1, TimeSpan.FromSeconds(0.4));
+            DoubleAnimation anim2 = new DoubleAnimation(0, TimeSpan.FromSeconds(2));
+            anim.Completed += new EventHandler((object sender2, EventArgs e2) => {
+                lbl_error_disp.BeginAnimation(OpacityProperty, anim2);
+            });
+            lbl_error_disp.BeginAnimation(OpacityProperty, anim);
+        }
+        private void img_next_MouseDown(object sender, MouseButtonEventArgs e)
+        {           
             if (tbx_username.Text == "" || tbx_username.Text.Length <= 4 || passbox.Password == "" || passbox.Password.Length <= 4)
             {
-                MessageBox.Show("Please enter valid information","Error",MessageBoxButton.OK,MessageBoxImage.Error,MessageBoxResult.OK,MessageBoxOptions.DefaultDesktopOnly); 
+                ErrDisp();
             }
 
             else
@@ -53,6 +63,7 @@ namespace DokiDoki
                 string passwordNoP = passbox.Password.GetHashCode().ToString();
                 string pepper = username.Substring(username.Length - 4) + passwordNoP.Substring(passwordNoP.Length - 4);
                 string password = Convert.ToBase64String(Encoding.UTF8.GetBytes((salt + passwordNoP + pepper).GetHashCode().ToString()));
+                passbox.Password = "";
 
                 Byte[] data = Encoding.ASCII.GetBytes(username + ";" + password);
                 NetworkStream stream = client.GetStream();
@@ -64,7 +75,7 @@ namespace DokiDoki
 
                 stream.Close();
                 client.Close();
-
+                
                 bool trfr;
                 if (responsedata == "1")
                 {
@@ -82,12 +93,10 @@ namespace DokiDoki
                 }
                 else
                 {
-                    MessageBox.Show("Please check your username or password","Authentication Error", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                    ErrDisp();
                     client = new TcpClient();
-                }
+                }                
             }
-           
-
         }
 
       private String CreateSalt(int size)
@@ -112,6 +121,12 @@ namespace DokiDoki
             DoubleAnimation anim2 = new DoubleAnimation(1, 0.8, TimeSpan.FromSeconds(0.2));
             img_next.BeginAnimation(OpacityProperty, anim);
             lbl_deko_next.BeginAnimation(OpacityProperty, anim2);
+        }
+
+        private void passbox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+                img_next_MouseDown(null, null);
         }
     }
 }
