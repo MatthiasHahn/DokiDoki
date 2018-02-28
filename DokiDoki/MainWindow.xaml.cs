@@ -52,7 +52,7 @@ namespace DokiDoki
                 string username = tbx_username.Text;
                 string passwordNoP = passbox.Password.GetHashCode().ToString();
                 string pepper = username.Substring(username.Length - 4) + passwordNoP.Substring(passwordNoP.Length - 4);
-                string password = (salt + passwordNoP + pepper).GetHashCode().ToString();
+                string password = Convert.ToBase64String(Encoding.UTF8.GetBytes((salt + passwordNoP + pepper).GetHashCode().ToString()));
 
                 Byte[] data = Encoding.ASCII.GetBytes(username + ";" + password);
                 NetworkStream stream = client.GetStream();
