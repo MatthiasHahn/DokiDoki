@@ -31,5 +31,6 @@
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>
+        <Label x:Name="lbl_error_disp_reg" Content="" HorizontalAlignment="Left" Margin="254,236,0,0" VerticalAlignment="Top" Height="30" Width="184" FontSize="15" Background="#4C000000" Foreground="Red" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold" Opacity="0"/>
     </Grid>
 </Window>

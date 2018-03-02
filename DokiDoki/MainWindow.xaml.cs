@@ -31,6 +31,7 @@ namespace DokiDoki
         public MainWindow()
         {
             InitializeComponent();
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void wnd_main_MouseDown(object sender, MouseButtonEventArgs e)

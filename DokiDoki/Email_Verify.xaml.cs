@@ -22,6 +22,7 @@ namespace DokiDoki
         public Email_Verify()
         {
             InitializeComponent();
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
     }
 }

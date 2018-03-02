@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}</ProjectGuid>
+    <ProjectGuid>{C3F1A9B2-41CA-4649-A680-C5511D2BB2E1}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DokiDoki_Login_Server</RootNamespace>
-    <AssemblyName>DokiDoki_Login_Server</AssemblyName>
+    <RootNamespace>Register_Server</RootNamespace>
+    <AssemblyName>Register_Server</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Login_Server.cs" />
+    <Compile Include="Register_Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
