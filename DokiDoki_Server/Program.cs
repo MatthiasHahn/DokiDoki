@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DokiDoki_Server
 {
@@ -39,7 +40,7 @@ namespace DokiDoki_Server
             DateTime fps_lock = DateTime.Now;            
             while (true)
             {
-                if ((DateTime.Now - fps_lock).Milliseconds >= 32)
+                if ((DateTime.Now - fps_lock).Milliseconds >= 8)
                 {
                     User.GetWindowRect(proc.MainWindowHandle, ref rect);
                     using (var bmp = new Bitmap(rect.right - rect.left, rect.bottom - rect.top, System.Drawing.Imaging.PixelFormat.Format32bppRgb))

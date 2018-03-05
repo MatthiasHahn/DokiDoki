@@ -36,12 +36,12 @@ namespace DokiDoki
                 while (true)
                 {
                     try
-                    {                        
+                    {
                         List<byte[]> parts = new List<byte[]>();
                         byte[] buffer = new byte[1];
                         socket.Receive(buffer);
                         var count = Convert.ToInt32(buffer[0]);
-                        for (int i = 0; i < count; i++)
+                        for(int i = 0; i < count; i++)
                         {
                             buffer = new byte[64000];
                             socket.Receive(buffer);
@@ -57,9 +57,10 @@ namespace DokiDoki
                             bmp = (Bitmap)Image.FromStream(ms);
                         }
                         Display(bmp);
-                    } catch(Exception ex) 
+                    }
+                    catch (Exception ex)
                     {
-                       //MessageBox.Show(ex.ToString());
+                        //MessageBox.Show(ex.ToString());
                     }
                 }
             });
