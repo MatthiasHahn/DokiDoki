@@ -88,7 +88,7 @@ namespace DokiDoki
                 }
                 if (trfr)
                 {
-                    Rooms rm = new Rooms();
+                    Rooms rm = new Rooms(new IPEndPoint(IPAddress.Parse("192.168.1.10"), 9999));
                     rm.Show();
                     Close();
                 }
