@@ -33,7 +33,7 @@ namespace DokiDoki
 
         private void img_next_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Rooms rm = new Rooms(new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, 9999));            
+            Rooms rm = new Rooms(new System.Net.IPEndPoint(System.Net.IPAddress.Parse("192.168.1.10"), 9999));            
             rm.Show();
             Close();
 

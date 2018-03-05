@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DokiDoki"
         mc:Ignorable="d"
-        Title="Rooms" Height="300" Width="300">
+        Title="Rooms" Height="600" Width="600">
     <Grid>
-        <Image x:Name="img_disp" HorizontalAlignment="Left" Height="154" Margin="10,10,0,0" VerticalAlignment="Top" Width="272"/>
+        <Image x:Name="img_disp" Margin="10,10,10,210"/>
 
     </Grid>
 </Window>

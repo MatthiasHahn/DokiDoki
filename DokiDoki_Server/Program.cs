@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -40,9 +42,8 @@ namespace DokiDoki_Server
                 if ((DateTime.Now - fps_lock).Milliseconds >= 32)
                 {
                     User.GetWindowRect(proc.MainWindowHandle, ref rect);
-                    using (var bmp = new Bitmap(rect.right - rect.left, rect.bottom - rect.top, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
-                    {
-                        bmp.SetResolution((rect.right - rect.left) / 4, (rect.bottom - rect.top) / 4);
+                    using (var bmp = new Bitmap(rect.right - rect.left, rect.bottom - rect.top, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
+                    {                        
                         Graphics.FromImage(bmp).CopyFromScreen(rect.left, rect.top, 0, 0, new System.Drawing.Size(rect.right - rect.left, rect.bottom - rect.top), CopyPixelOperation.SourceCopy);
                         Send(bmp);
                     }
@@ -50,18 +51,48 @@ namespace DokiDoki_Server
                 }
             }
         }
+        private static ImageCodecInfo GetEncoder(ImageFormat format)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+            foreach (ImageCodecInfo codec in codecs)            
+                if (codec.FormatID == format.Guid)                
+                    return codec;            
+            return null;
+        }
         private static void Send(Bitmap bmp)
         {
             ImageConverter con = new ImageConverter();
-            byte[] arr = (byte[])con.ConvertTo(bmp, typeof(byte[]));
-            for (int i = 0; i < arr.Length; i += 1500)
+            byte[] arr;
+            ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+            System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
+            EncoderParameters myEncoderParameters = new EncoderParameters(1);
+            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 30L);
+            myEncoderParameters.Param[0] = myEncoderParameter;
+            using (var stream = new MemoryStream())
             {
-                if (i + 1500 < arr.Length)
-                    socket.Send(arr, i, i + 1500, SocketFlags.None);
-                else
-                    socket.Send(arr, i, arr.Length, SocketFlags.None);
+                bmp.Save(stream, jpgEncoder, myEncoderParameters);
+                arr = stream.ToArray();
             }
-            socket.Send(Encoding.ASCII.GetBytes("Stop"));
+            List<byte[]> parts = new List<byte[]>();
+            int partsize = 64000;
+            for(int i = 0; i<arr.Length; i+=partsize)
+            {
+                byte[] res;
+                if (i + partsize <= arr.Length)
+                {
+                    res = new byte[partsize];
+                    Array.Copy(arr, i, res, 0, partsize);
+                }
+                else
+                {
+                    res = new byte[arr.Length - i];
+                    Array.Copy(arr, i, res, 0, arr.Length - i);
+                }
+                parts.Add(res);
+            }
+            socket.Send(new byte[] { Convert.ToByte(parts.Count) });
+            for (int i = 0; i < parts.Count; i++)            
+                socket.Send(parts[i]);            
         }
         private class User
         {
