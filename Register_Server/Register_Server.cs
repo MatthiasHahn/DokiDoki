@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.Mail;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 
@@ -49,10 +50,26 @@ namespace DokiDoki_Register_Server
 
                     if (valid)
                     {
+                        Random rnd = new Random();
+                        int code = rnd.Next(100000,999999);
                         Create_User(user,pass,email);
-                        byte[] msg = Encoding.ASCII.GetBytes(tr);
+                        byte[] msg = Encoding.ASCII.GetBytes(tr+";"+code);
                         stream.Write(msg, 0, msg.Length);
                         Console.WriteLine("User Created");
+
+                        MailMessage mail = new MailMessage();
+                        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+
+                        mail.From = new MailAddress("noreply.dokidoki@gmail.com");
+                        mail.To.Add(email);
+                        mail.Subject = "Your Code [Doki Doki]";
+                        mail.Body = "Here is your code: " + code.ToString();
+
+                        SmtpServer.Port = 25;
+                        SmtpServer.Credentials = new System.Net.NetworkCredential("noreply.dokidoki@gmail.com", "noreplydokidoki");
+                        SmtpServer.EnableSsl = true;
+
+                        SmtpServer.Send(mail);
 
                     }
 

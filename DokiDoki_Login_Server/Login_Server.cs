@@ -44,24 +44,33 @@ namespace DokiDoki_Login_Server
                     Console.WriteLine(data);
                     string user = data.Split(';')[0];
                     string pass = data.Split(';')[1];
-                    bool valid = validate_login(user, pass);
+                    bool validuser = validate_login(user, pass);
+                    bool validemail = validate_email(user, pass);
 
-                    string tr = "1";
-                    string fl = "0";
+                    string evuv = "01";
+                    string ev = "00";
+                    string uv = "11";
 
-                    if (valid)
+                    if (validuser && validemail)
                     {
-                        byte[] msg = Encoding.ASCII.GetBytes(tr);
+                        byte[] msg = Encoding.ASCII.GetBytes(evuv);
                         stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Message Valid");
+                        Console.WriteLine("User and Email Valid");
 
+                    }
+
+                    else if (validuser && !validemail)
+                    {
+                        byte[] msg = Encoding.ASCII.GetBytes(uv);
+                        stream.Write(msg, 0, msg.Length);
+                        Console.WriteLine("Email UnValid");
                     }
 
                     else
                     {
-                        byte[] msg = Encoding.ASCII.GetBytes(fl);
+                        byte[] msg = Encoding.ASCII.GetBytes(ev);
                         stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Message UnValid");
+                        Console.WriteLine("User UnValid");
                     }
                 }
             }
@@ -80,6 +89,29 @@ namespace DokiDoki_Login_Server
             dbconnect();
             MySqlCommand cmd = new MySqlCommand();
             cmd.CommandText = "Select * from users where username=@user and password=@pass";
+            cmd.Parameters.AddWithValue("@user", user);
+            cmd.Parameters.AddWithValue("@pass", pass);
+            cmd.Connection = connect;
+            MySqlDataReader login = cmd.ExecuteReader();
+
+
+
+            if (login.Read())
+            {
+                connect.Close();
+                return true;
+            }
+            else
+            {
+                connect.Close();
+                return false;
+            }
+        }
+        private static bool validate_email(string user, string pass)
+        {
+            dbconnect();
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.CommandText = "Select * from users where username=@user and password=@pass and ev=1";
             cmd.Parameters.AddWithValue("@user", user);
             cmd.Parameters.AddWithValue("@pass", pass);
             cmd.Connection = connect;

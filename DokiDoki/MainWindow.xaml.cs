@@ -39,8 +39,9 @@ namespace DokiDoki
             DragMove();
         }
 
-        private void ErrDisp()
+        private void ErrDisp(string msg)
         {
+            lbl_error_disp.Content = msg;
             DoubleAnimation anim = new DoubleAnimation(1, TimeSpan.FromSeconds(0.4));
             DoubleAnimation anim2 = new DoubleAnimation(0, TimeSpan.FromSeconds(2));
             anim.Completed += new EventHandler((object sender2, EventArgs e2) => {
@@ -52,7 +53,7 @@ namespace DokiDoki
         {           
             if (tbx_username.Text == "" || tbx_username.Text.Length <= 4 || passbox.Password == "" || passbox.Password.Length <= 4)
             {
-                ErrDisp();
+                ErrDisp("Invalid Input");
             }
 
             else
@@ -76,27 +77,41 @@ namespace DokiDoki
 
                 stream.Close();
                 client.Close();
-                
-                bool trfr;
-                if (responsedata == "1")
+
+                string evuv = null;
+                string ev = null;
+                string uv = null;
+                if (responsedata == "01")
                 {
-                    trfr = true;
+                    evuv = responsedata;
                 }
+                else if (responsedata == "11")
+                {
+                    ev = responsedata;
+                }
+
                 else
                 {
-                    trfr = false;
+                    uv = responsedata;
                 }
-                if (trfr)
+
+                if (evuv == "01")
                 {
                     Rooms rm = new Rooms();
                     rm.Show();
                     Close();
                 }
+                else if (ev == "11")
+                {
+                    ErrDisp("Verify Your Email");
+                    client = new TcpClient();
+                }
+
                 else
                 {
-                    ErrDisp();
+                    ErrDisp("Check Your Username or Password");
                     client = new TcpClient();
-                }                
+                }
             }
         }
 
