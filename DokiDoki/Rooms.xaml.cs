@@ -35,21 +35,33 @@ namespace DokiDoki
             Task.Run(() => {
                 while (true)
                 {
-                    List<byte> arr = new List<byte>();
-                    byte[] buffer = new byte[1600];
-                    while (Encoding.ASCII.GetString(buffer) != "Stop")
+                    try
                     {
+                        List<byte[]> parts = new List<byte[]>();
+                        byte[] buffer = new byte[1];
                         socket.Receive(buffer);
-                        if (Encoding.ASCII.GetString(buffer) != "stop")
-                            foreach (byte b in buffer)
-                                arr.Add(b);
+                        var count = Convert.ToInt32(buffer[0]);
+                        for(int i = 0; i < count; i++)
+                        {
+                            buffer = new byte[64000];
+                            socket.Receive(buffer);
+                            parts.Add(buffer);
+                        }
+                        List<byte> arr = new List<byte>();
+                        foreach (var b in parts)
+                            foreach (var bb in b)
+                                arr.Add(bb);
+                        Bitmap bmp;
+                        using (var ms = new MemoryStream(arr.ToArray()))
+                        {
+                            bmp = (Bitmap)Image.FromStream(ms);
+                        }
+                        Display(bmp);
                     }
-                    Bitmap bmp;
-                    using(var ms = new MemoryStream(arr.ToArray()))
+                    catch (Exception ex)
                     {
-                        bmp = (Bitmap)Image.FromStream(ms);
+                        //MessageBox.Show(ex.ToString());
                     }
-                    Display(bmp);
                 }
             });
         }
@@ -57,15 +69,7 @@ namespace DokiDoki
         public void Display(Bitmap bmp)
         {
             img_disp.Dispatcher.Invoke(() => {
-                ImageConverter converter = new ImageConverter();
-                byte[] arr = (byte[])converter.ConvertTo(bmp, typeof(byte[]));
-
-                Bitmap bmp2;
-                using (var ms = new MemoryStream(arr))
-                {
-                    bmp2 = (Bitmap)Image.FromStream(ms);
-                }
-                var hbit = bmp2.GetHbitmap();
+                var hbit = bmp.GetHbitmap();
                 img_disp.Source = Imaging.CreateBitmapSourceFromHBitmap(hbit, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 DeleteObject(hbit);
             });
