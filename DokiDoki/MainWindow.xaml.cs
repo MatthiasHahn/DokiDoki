@@ -88,7 +88,7 @@ namespace DokiDoki
                 }
                 if (trfr)
                 {
-                    Rooms rm = new Rooms(ServerPass);
+                    Rooms rm = new Rooms(ServerPass, tbx_username.Text);
                     rm.Show();
                     Close();
                 }
@@ -96,7 +96,7 @@ namespace DokiDoki
                 {
                     ErrDisp();
                     client = new TcpClient();
-                }                
+                }
             }
         }
 
