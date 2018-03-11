@@ -24,7 +24,7 @@ namespace DokiDoki_Chat_Server
                 Task.Run(() =>
                 {
                     StreamReader rdr = new StreamReader(client.GetStream());
-                    StreamWriter wrt2 = new StreamWriter(client.GetStream());
+                    StreamWriter wrt2 = new StreamWriter(client.GetStream()); //For Test Only
                     while (true)
                     {
                         string msg = rdr.ReadLine();
@@ -36,6 +36,7 @@ namespace DokiDoki_Chat_Server
                                     true))
                                 {
                                     wrt.WriteLine(msg);
+                                    wrt.Flush();
                                 }
                             }
                         wrt2.WriteLine("Server: Accepted");
