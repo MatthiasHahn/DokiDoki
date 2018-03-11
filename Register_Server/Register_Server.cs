@@ -20,7 +20,7 @@ namespace DokiDoki_Register_Server
             dbconnect();
             Console.WriteLine("Register Server Connected");
 
-            listen = new TcpListener(IPAddress.Parse("127.0.0.1"), 8888);
+            listen = new TcpListener(IPAddress.Loopback, 8888);
             listen.Start();
 
             Byte[] bytes = new Byte[256];

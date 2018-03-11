@@ -24,14 +24,15 @@ namespace DokiDoki
     /// </summary>
     public partial class Rooms : Window
     {
+        static IPEndPoint m = new IPEndPoint(IPAddress.Parse("224.168.55.25"), 8888);
+        static IPEndPoint local = new IPEndPoint(IPAddress.Any, 8888);
         public Rooms(IPEndPoint Server)
         {
             InitializeComponent();
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.5"), 8888);
-            socket.Bind(localEndPoint);
-            socket.Connect(Server);
-            socket.Send(new byte[] { 1, 0, 0 });
+            socket.MulticastLoopback = true;
+            socket.Bind(local);
+            socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(m.Address, IPAddress.Any));        
             Task.Run(() => {
                 while (true)
                 {
@@ -77,5 +78,21 @@ namespace DokiDoki
 
         [DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
+
+        private void img_disp_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (wnd_main.WindowState == WindowState.Normal)
+            {
+                wnd_main.WindowState = WindowState.Maximized;
+                wnd_main.WindowStyle = WindowStyle.None;
+                img_disp.Margin = new Thickness(0);
+            }
+            else
+            {
+                wnd_main.WindowState = WindowState.Normal;
+                wnd_main.WindowStyle = WindowStyle.SingleBorderWindow;
+                img_disp.Margin = new Thickness(10,10,10,210);
+            }
+        }
     }
 }
