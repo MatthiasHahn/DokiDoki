@@ -65,9 +65,12 @@ namespace DokiDoki
                 string pepper = username.Substring(username.Length - 4) + passwordNoP.Substring(passwordNoP.Length - 4);
                 string password = Convert.ToBase64String(Encoding.UTF8.GetBytes((salt + passwordNoP + pepper).GetHashCode().ToString()));
                 passbox.Password = "";
-
+                                
                 Byte[] data = Encoding.ASCII.GetBytes(username + ";" + password);
                 NetworkStream stream = client.GetStream();
+                stream.Write(new byte[] { 0 },0, 1);
+                stream.Flush();
+
                 stream.Write(data, 0, data.Length);
                 data = new Byte[256];
                 string responsedata = string.Empty;
@@ -88,7 +91,7 @@ namespace DokiDoki
                 }
                 if (trfr)
                 {
-                    Rooms rm = new Rooms(ServerPass);
+                    Rooms rm = new Rooms(ServerPass, tbx_username.Text);
                     rm.Show();
                     Close();
                 }
@@ -96,7 +99,7 @@ namespace DokiDoki
                 {
                     ErrDisp();
                     client = new TcpClient();
-                }                
+                }
             }
         }
 

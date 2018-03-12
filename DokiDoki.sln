@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DokiDoki", "DokiDoki\DokiDo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DokiDoki_Login_Server", "DokiDoki_Login_Server\DokiDoki_Login_Server.csproj", "{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DokiDoki_Register_Server", "Register_Server\DokiDoki_Register_Server.csproj", "{C3F1A9B2-41CA-4649-A680-C5511D2BB2E1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DokiDoki_Server", "DokiDoki_Server\DokiDoki_Server.csproj", "{2F37069A-8744-4150-ADBE-9880EDBF2398}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DokiDoki_Chat_Server", "DokiDoki_Chat_Server\DokiDoki_Chat_Server.csproj", "{C3167B6D-2FE7-4B27-B2E7-B5611532B132}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +25,14 @@ Global
 		{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A0EB561-A7D5-41F9-B144-F2EF2DD3668E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C3F1A9B2-41CA-4649-A680-C5511D2BB2E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3F1A9B2-41CA-4649-A680-C5511D2BB2E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C3F1A9B2-41CA-4649-A680-C5511D2BB2E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3F1A9B2-41CA-4649-A680-C5511D2BB2E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2F37069A-8744-4150-ADBE-9880EDBF2398}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2F37069A-8744-4150-ADBE-9880EDBF2398}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F37069A-8744-4150-ADBE-9880EDBF2398}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F37069A-8744-4150-ADBE-9880EDBF2398}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3167B6D-2FE7-4B27-B2E7-B5611532B132}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3167B6D-2FE7-4B27-B2E7-B5611532B132}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3167B6D-2FE7-4B27-B2E7-B5611532B132}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3167B6D-2FE7-4B27-B2E7-B5611532B132}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

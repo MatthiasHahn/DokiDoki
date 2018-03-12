@@ -78,7 +78,7 @@ namespace DokiDoki
 
         private void img_next_reg_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+
 
             bool swear = BasicInputCheck(tbx_username_reg, passbox_reg, tbx_email);
             if (!swear)
@@ -95,7 +95,7 @@ namespace DokiDoki
             else
             {
                 TcpClient client = new TcpClient();
-                client.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
+                client.Connect(new IPEndPoint(IPAddress.Loopback, 7777));
                 bool servervalid;
                 string salt = "MP1Sfss==";
                 string username = tbx_username_reg.Text;
@@ -106,6 +106,9 @@ namespace DokiDoki
 
                 Byte[] data = Encoding.ASCII.GetBytes(username + ";" + password + ";" + email);
                 NetworkStream stream = client.GetStream();
+                stream.Write(new byte[] { 1 }, 0, 1);
+                stream.Flush();
+
                 stream.Write(data, 0, data.Length);
                 data = new Byte[256];
                 string responsedata = string.Empty;
