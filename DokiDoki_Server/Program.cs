@@ -22,7 +22,7 @@ namespace DokiDoki_Server
         {
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            localEndPoint = new IPEndPoint(IPAddress.Loopback, 9999);
+            localEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.10"), 9999);
             socket.Bind(localEndPoint);
             EndPoint remoteEP = new IPEndPoint(IPAddress.Any, 8888);
             socket.SendBufferSize = 819200;
@@ -40,7 +40,7 @@ namespace DokiDoki_Server
             DateTime fps_lock = DateTime.Now;            
             while (true)
             {
-                if ((DateTime.Now - fps_lock).Milliseconds >= 8)
+                if ((DateTime.Now - fps_lock).Milliseconds >= 15)
                 {
                     User.GetWindowRect(proc.MainWindowHandle, ref rect);
                     using (var bmp = new Bitmap(rect.right - rect.left, rect.bottom - rect.top, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
