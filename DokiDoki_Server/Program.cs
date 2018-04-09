@@ -11,46 +11,48 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using CSCore;
-using CSCore.Codecs.WAV;
+using CSCore.Codecs.MP3;
 using CSCore.SoundIn;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace DokiDoki_Server
 {
     class Program
     {
         static Socket socket;
-        static MemoryStream SoundStream = new MemoryStream();
+        static List<byte> soundarr = new List<byte>();
+        static WasapiCapture cptr;
 
         static ImageConverter con = new ImageConverter();
         static ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
-        static EncoderParameters myEncoderParameters = new EncoderParameters(1);
+        static EncoderParameters myEncoderParameters = new EncoderParameters(2);
         static MemoryStream ConverterStream = new MemoryStream();
         static IPEndPoint m = new IPEndPoint(IPAddress.Parse("224.168.55.25"), 8888);
         static IPEndPoint local = new IPEndPoint(IPAddress.Any, 9999);
+        static System.Timers.Timer CaptureLoop;
+
+        static List<byte> ScreenS;
         static void Main(string[] args)
         {
-            myEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 30L);
+            myEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 50L);
+            myEncoderParameters.Param[1] = new EncoderParameter(System.Drawing.Imaging.Encoder.Compression, 1L);
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.MulticastLoopback = true;
             socket.Bind(local);
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(m.Address, IPAddress.Any));
             string procid = Console.ReadLine();
-
-            /*WaveFormat waveFormat = new WaveFormat(4000, 8, 1, AudioEncoding.Gsm);
-            WasapiCapture cptr = new WasapiLoopbackCapture(10, waveFormat, ThreadPriority.AboveNormal, true);            
+            
+            Mp3Format format = new Mp3Format(4000, 1, 100, 8);
+            cptr = new WasapiLoopbackCapture(10, format, ThreadPriority.AboveNormal, true);
             cptr.Initialize();
-            WaveWriter w = new WaveWriter(SoundStream, cptr.WaveFormat);            
             cptr.DataAvailable += (s, e) =>
             {
-                w.Write(e.Data, e.Offset, e.ByteCount);
+                soundarr.AddRange(e.Data);
             };
-            cptr.Start();*/
-            Capture(procid);
-        }
-        static void Capture(string procid)
-        {
+            cptr.Start();
+
             var procs = Process.GetProcessesByName(procid);
             Process proc = null;
             var rect = new User.RECT();
@@ -65,20 +67,42 @@ namespace DokiDoki_Server
             }
             if (proc == null)
                 return;
-            DateTime fps_lock = DateTime.Now;    
+
+            Capture(proc);
+
+            CaptureLoop = new System.Timers.Timer();
+            CaptureLoop.Interval = 32;
+            CaptureLoop.Elapsed += (sender, e) => { Send(ScreenS); };
+            CaptureLoop.Start();
+            while(true)
+            {
+                Capture(proc);
+            } 
+        }
+        static void Capture(Process proc)
+        {
+            var rect = new User.RECT();
+            User.GetWindowRect(proc.MainWindowHandle, ref rect);
+            using (var bmp = new Bitmap(rect.right - rect.left, rect.bottom - rect.top, System.Drawing.Imaging.PixelFormat.Format16bppRgb555))
+            {
+                Graphics.FromImage(bmp).CopyFromScreen(rect.left, rect.top, 0, 0, new System.Drawing.Size(rect.right - rect.left, rect.bottom - rect.top), CopyPixelOperation.SourceCopy);
+                ScreenS = ConvertTo(bmp);
+            }           
+            /*
+            DateTime fps_lock = DateTime.Now;
             while (true)
             {
                 if ((DateTime.Now - fps_lock).Milliseconds >= 16)
                 {
                     User.GetWindowRect(proc.MainWindowHandle, ref rect);
                     using (var bmp = new Bitmap(rect.right - rect.left, rect.bottom - rect.top, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
-                    {                        
+                    {
                         Graphics.FromImage(bmp).CopyFromScreen(rect.left, rect.top, 0, 0, new System.Drawing.Size(rect.right - rect.left, rect.bottom - rect.top), CopyPixelOperation.SourceCopy);
                         fps_lock = DateTime.Now;
                         Send(bmp);
-                    }                    
+                    }
                 }
-            }
+            }*/
         }
         private static ImageCodecInfo GetEncoder(ImageFormat format)
         {
@@ -88,36 +112,46 @@ namespace DokiDoki_Server
                     return codec;            
             return null;
         }
-        private static Task Send(Bitmap bmp)
+        private static List<byte> ConvertTo(Bitmap bmp)
         {
             List<byte> arr = new List<byte>();
-            ConverterStream = new MemoryStream();
-            bmp.Save(ConverterStream, jpgEncoder, myEncoderParameters);
-            arr.AddRange(ConverterStream.ToArray());
-            ConverterStream.Dispose();
+            using (ConverterStream = new MemoryStream())
+            {
+                bmp.Save(ConverterStream, GetEncoder(ImageFormat.Jpeg), myEncoderParameters);
+                arr.AddRange(ConverterStream.ToArray());
+            }
+            return arr;
+        }
+        private static Task Send(List<byte> arr)
+        {            
             List<byte[]> parts = new List<byte[]>();
-            int partsize = 64000;
+            int partsize = 32000;            
             for (int i = 0; i < arr.Count; i += partsize)
             {
                 parts.Add(i + partsize <= arr.Count ?
                     arr.GetRange(i, partsize).ToArray() :
                     arr.GetRange(i, arr.Count - i).ToArray());
             }
-
-            /*List<byte> soundarr = new List<byte>();
+            
             List<byte[]> soundparts = new List<byte[]>();
-            soundarr.AddRange(SoundStream.ToArray());
-            SoundStream.Flush();
-            for(int i = 0; i<soundarr.Count; i += partsize)
+            for (int i = 0; i < soundarr.Count; i += partsize)
             {
-                soundparts.Add(i + partsize <= soundparts.Count ? 
-                    soundarr.GetRange(i, partsize).ToArray() : 
+                soundparts.Add(i + partsize <= soundarr.Count ?
+                    soundarr.GetRange(i, partsize).ToArray() :
                     soundarr.GetRange(i, soundarr.Count - i).ToArray());
-            }*/
+            }            
+            Console.WriteLine("Parts: " + parts.Count + ", Arr: " + arr.Count + " | Sound_Parts: " + soundparts.Count + ", Sound_Arr: " + soundarr.Count);
+            soundarr = new List<byte>();
 
             socket.SendTo(new byte[] { Convert.ToByte(parts.Count) }, m);
+            socket.SendTo(new byte[] { Convert.ToByte(soundparts.Count) }, m);
+
             foreach (var p in parts)
                 socket.SendTo(p,m);
+            
+            foreach (var p in soundparts)
+                socket.SendTo(p, m);
+
             return Task.FromResult(true);
         }
         private class User
@@ -137,7 +171,8 @@ namespace DokiDoki_Server
             [DllImport("user32.dll")]
             public static extern IntPtr ReleaseDC(IntPtr hWnd, IntPtr hDC);
             [DllImport("user32.dll")]
-            public static extern IntPtr GetWindowRect(IntPtr hWnd, ref RECT rect);
+            [return: MarshalAs(UnmanagedType.AsAny)]
+            public static extern void GetWindowRect(IntPtr hWnd, ref RECT rect);
         }
     }
 }

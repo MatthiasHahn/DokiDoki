@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DokiDoki"
         mc:Ignorable="d"
-        Title="MainWindow" Height="211.334" Width="425.667" WindowStyle="None" ResizeMode="NoResize" MouseDown="wnd_main_MouseDown" Foreground="{x:Null}">
+        Title="MainWindow" Height="211.334" Width="425.667" WindowStyle="None" ResizeMode="NoResize" MouseDown="wnd_main_MouseDown" Foreground="{x:Null}" AllowsTransparency="True" Loaded="wnd_main_Loaded">
     <Window.Background>
-        <ImageBrush ImageSource="Images/WP.png"/>
+        <ImageBrush ImageSource="Images/WP.png" Opacity="0.8"/>
     </Window.Background>
     <Grid>
 

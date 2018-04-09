@@ -18,6 +18,9 @@ using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Net;
 using System.Net.Sockets;
+using CSCore;
+using CSCore.SoundOut;
+using CSCore.Codecs.MP3;
 
 namespace DokiDoki
 {
@@ -52,7 +55,7 @@ namespace DokiDoki
             chat.CollectionChanged +=
                 new NotifyCollectionChangedEventHandler((object sender, NotifyCollectionChangedEventArgs e) =>
                 {
-                    lbx_chat.ScrollIntoView(lbx_chat.Items[lbx_chat.Items.Count - 1]);                    
+                    lbx_chat.ScrollIntoView(lbx_chat.Items[lbx_chat.Items.Count - 1]);
                     foreach (var i in e.NewItems)
                         if (i.ToString().Split(':')[0] == Name)
                             sw.WriteLine(i);
@@ -63,41 +66,90 @@ namespace DokiDoki
             socket.Bind(local);
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership,
                 new MulticastOption(m.Address, IPAddress.Any));
+
             Task.Run(() =>
             {
+                bool exep;
                 while (true)
                 {
-                    try
+                    exep = false;
+                    List<byte[]> parts = new List<byte[]>();
+                    byte[] buffer = new byte[1];
+                    byte[] sbuffer = new byte[1];
+                    try { socket.Receive(buffer); socket.Receive(sbuffer); }
+                    catch (Exception ex)
+                    { exep = true; }
+                    if (!exep)
                     {
-                        List<byte[]> parts = new List<byte[]>();
-                        byte[] buffer = new byte[1];
-                        socket.Receive(buffer);
                         var count = Convert.ToInt32(buffer[0]);
-                        for (int i = 0; i < count; i++)
+                        for (int i = 0; i < count - 1; i++)
                         {
-                            buffer = new byte[64000];
-                            socket.Receive(buffer);
+                            buffer = new byte[32000];
+                            socket.Receive(buffer, 32000, SocketFlags.None);
                             parts.Add(buffer);
                         }
-                        List<byte> arr = new List<byte>();
-                        foreach (var b in parts)
-                            foreach (var bb in b)
-                                arr.Add(bb);
-                        Bitmap bmp;
-                        using (var ms = new MemoryStream(arr.ToArray()))
+                        buffer = new byte[32000];
+                        socket.Receive(buffer);
+                        parts.Add(buffer);
+
+                        List<byte[]> soundparts = new List<byte[]>();
+                        count = Convert.ToInt32(sbuffer[0]);
+                        for (int i = 0; i < count; i++)
                         {
-                            bmp = (Bitmap)Image.FromStream(ms);
+                            buffer = new byte[32000];
+                            socket.Receive(buffer);
+                            soundparts.Add(buffer);
                         }
-                        Display(bmp);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
+
+                        Task.Run(() => new Action<List<byte[]>>((prts) =>
+                        {
+                            List<byte> arr = new List<byte>();
+                            foreach (var b in prts)
+                                arr.AddRange(b);
+
+                            List<byte> soundarr = new List<byte>();
+                            foreach (var b in soundparts)
+                                soundarr.AddRange(b);
+
+                            if (arr.Count > 0 && arr[0] == 255 && arr[1] == 216)
+                            {
+                                Bitmap bmp;
+                                using (var ms = new MemoryStream(arr.ToArray()))
+                                {
+                                    bmp = (Bitmap)Image.FromStream(ms);
+                                    Display(bmp);
+                                }
+                            }
+
+                            //try { PlaySound(soundarr.ToArray()); } catch { }
+                        }).Invoke(parts));
                     }
                 }
             });
         }
-
+        private static IWaveSource GetSoundSource(Stream stream)
+        {
+            // Instead of using the CodecFactory as helper, you specify the decoder directly:            
+            return new DmoMp3Decoder(stream);
+        }
+        public void PlaySound(byte[] snd)
+        {
+            using (var soundstrm = new MemoryStream(snd))
+            {
+                using (IWaveSource soundSource = GetSoundSource(soundstrm))
+                {
+                    using (ISoundOut soundOut = new WasapiOut())
+                    {
+                        soundOut.Volume = 1;
+                        soundOut.Initialize(soundSource);
+                        soundOut.Play();
+                        while (soundOut.PlaybackState == PlaybackState.Playing)
+                        { }
+                        soundOut.Stop();
+                    }
+                }
+            }
+        }
         public void Display(Bitmap bmp)
         {
             img_disp.Dispatcher.Invoke(() =>
