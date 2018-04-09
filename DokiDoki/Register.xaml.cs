@@ -82,8 +82,7 @@ namespace DokiDoki
 
             bool swear = BasicInputCheck(tbx_username_reg, passbox_reg, tbx_email);
             if (!swear)
-            {
-                lbl_error_disp_reg.Content = "Check Your Input";
+            {                
                 DoubleAnimation anim = new DoubleAnimation(1, TimeSpan.FromSeconds(0.4));
                 DoubleAnimation anim2 = new DoubleAnimation(0, TimeSpan.FromSeconds(2));
                 anim.Completed += new EventHandler((object sender2, EventArgs e2) => {
@@ -138,7 +137,7 @@ namespace DokiDoki
 
                 else
                 {
-                    lbl_error_disp_reg.Content = "User Already Exists";
+                    lbl_error_disp_reg.Text = "User Already Exists";
                     DoubleAnimation anim = new DoubleAnimation(1, TimeSpan.FromSeconds(0.4));
                     DoubleAnimation anim2 = new DoubleAnimation(0, TimeSpan.FromSeconds(2));
                     anim.Completed += new EventHandler((object sender2, EventArgs e2) => {
@@ -159,36 +158,34 @@ namespace DokiDoki
             string usernameT = username.Text;
             string passwordT = password.Password;
             string emailT = email.Text;
-            bool tf = false;
             if(usernameT =="" || passwordT == "" || emailT == "" )
             {
-                tf = false;
-                return tf;
+                lbl_error_disp_reg.Text = "Invalid Empty Input";
+                return false;
             }
 
             else if(usernameT.Length <=4)
             {
-                tf = false;
-                return tf;
+                lbl_error_disp_reg.Text = "Username Too Short";
+                return false;
             }
 
-            else if(passwordT.Length <=8 || !passwordT.Any(c => char.IsUpper(c))|| !Regex.IsMatch(passwordT,@"\d"))
+            else if(passwordT.Length <=8)
             {
-                tf = false;
-                return tf;
+                lbl_error_disp_reg.Text = "Password Too Short";
+                return false;
             }
-
+            else if((!passwordT.Any(c => char.IsUpper(c)) || !Regex.IsMatch(passwordT, @"\d")))
+            {
+                lbl_error_disp_reg.Text = "Missing Upper Character or Number in Password";
+                return false;
+            }
             else if(!Regex.IsMatch(emailT, @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"))
             {
-                tf = false;
-                return tf;
+                lbl_error_disp_reg.Text = "E-Mail Invalid";
+                return false;
             }
-
-            else
-            {
-                tf = true;
-            }
-            return tf;
+            return true;
            
 
             

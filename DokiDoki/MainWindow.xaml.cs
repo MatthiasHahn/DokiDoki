@@ -153,5 +153,10 @@ namespace DokiDoki
             if(e.Key == Key.Enter)
                 img_next_MouseDown(null, null);
         }
+
+        private void wnd_main_Loaded(object sender, RoutedEventArgs e)
+        {
+            Trans_BG_Blur.EnableBlur(this);
+        }
     }
 }

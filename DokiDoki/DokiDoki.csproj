@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSCore">
+      <HintPath>..\..\..\Doki_Doki_Literature_Club\cscore-master\CSCore\bin\Debug\CSCore.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 6.10.6\Assemblies\v4.5.2\MySql.Data.dll</HintPath>
@@ -73,6 +76,7 @@
     <Compile Include="Rooms.xaml.cs">
       <DependentUpon>Rooms.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Trans_BG_Blur.cs" />
     <Page Include="Email_Verify.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

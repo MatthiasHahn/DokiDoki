@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DokiDoki"
         mc:Ignorable="d"
-        Title="Rooms" Height="600" Width="600" Topmost="True">
+        Title="Rooms" Height="600" Width="600">
     <Grid>
         <Image x:Name="img_disp" Margin="10,10,10,210" MouseDown="img_disp_MouseDown"/>
-        <ListBox x:Name="lbx_chat" Margin="10,0,10,40" Height="150" VerticalAlignment="Bottom"></ListBox>
+        <ListBox x:Name="lbx_chat" Margin="10,370,10,40" Height="159" VerticalAlignment="Bottom"></ListBox>
         <TextBox x:Name="tbx_chat" Margin="10,0,10,5" Height="30" VerticalAlignment="Bottom" KeyDown="tbx_chat_KeyDown"/>
     </Grid>
 </Window>
