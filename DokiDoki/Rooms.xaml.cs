@@ -27,7 +27,7 @@ namespace DokiDoki
     public partial class Rooms : Window
     {
         static IPEndPoint m = new IPEndPoint(IPAddress.Parse("224.168.55.25"), 8888);
-        static IPEndPoint local = new IPEndPoint(IPAddress.Any, 8888);
+        static IPEndPoint local = new IPEndPoint(IPAddress.Parse("192.168.1.10"), 8888);
         static ObservableCollection<string> chat = new ObservableCollection<string>();
         private static TcpClient tcpClient;
         static string Name;
@@ -37,8 +37,8 @@ namespace DokiDoki
             InitializeComponent();
             Name = name;
             lbx_chat.ItemsSource = chat;
-            tcpClient = new TcpClient(new IPEndPoint(IPAddress.Loopback, 777));
-            tcpClient.Connect(new IPEndPoint(IPAddress.Loopback, 888));
+            tcpClient = new TcpClient(new IPEndPoint(IPAddress.Parse("192.168.1.10"), 777));
+            tcpClient.Connect(new IPEndPoint(IPAddress.Parse("192.168.1.5"), 888));
             StreamWriter sw = new StreamWriter(tcpClient.GetStream());
             StreamReader rdr = new StreamReader(tcpClient.GetStream());
             Task.Run(() =>
@@ -62,7 +62,7 @@ namespace DokiDoki
             socket.MulticastLoopback = true;
             socket.Bind(local);
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership,
-                new MulticastOption(m.Address, IPAddress.Any));
+                new MulticastOption(m.Address, local.Address));
             Task.Run(() =>
             {
                 while (true)
@@ -92,7 +92,7 @@ namespace DokiDoki
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.ToString());
+                        //MessageBox.Show(ex.ToString());
                     }
                 }
             });

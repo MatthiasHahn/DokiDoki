@@ -41,6 +41,7 @@ namespace DokiDoki_Chat_Server
                             }
                         wrt2.WriteLine("Server: Accepted");
                         wrt2.Flush();
+                    }
                 });
             }
         }

@@ -95,7 +95,7 @@ namespace DokiDoki
             else
             {
                 TcpClient client = new TcpClient();
-                client.Connect(new IPEndPoint(IPAddress.Loopback, 7777));
+                client.Connect(new IPEndPoint(IPAddress.Parse("192.168.1.5"), 7777));
                 bool servervalid;
                 string salt = "MP1Sfss==";
                 string username = tbx_username_reg.Text;

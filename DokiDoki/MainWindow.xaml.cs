@@ -13,8 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Animation;
-using MySql.Data.MySqlClient;
-using MySql.Data;
+//using MySql.Data.MySqlClient;
+//using MySql.Data;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
@@ -26,8 +26,8 @@ namespace DokiDoki
     /// </summary>
     public partial class MainWindow : Window
     {
-        public TcpClient client = new TcpClient();
-        private IPEndPoint ServerPass = new IPEndPoint(IPAddress.Loopback, 9999);
+        public TcpClient client = new TcpClient(new IPEndPoint(IPAddress.Parse("192.168.1.10"), 8888));
+        private IPEndPoint ServerPass = new IPEndPoint(IPAddress.Parse("192.168.1.5"), 9999);
         public MainWindow()
         {
             InitializeComponent();
@@ -57,7 +57,7 @@ namespace DokiDoki
 
             else
             {
-                client.Connect(new IPEndPoint(IPAddress.Loopback, 7777));
+                client.Connect(new IPEndPoint(IPAddress.Parse("192.168.1.5"), 7777));
 
                 string salt = "MP1Sfss==";
                 string username = tbx_username.Text;

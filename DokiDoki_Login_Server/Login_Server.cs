@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-using MySql.Data;
-using MySql.Data.MySqlClient;
+//using MySql.Data;
+//using MySql.Data.MySqlClient;
 
 namespace DokiDoki_Login_Server
 {
