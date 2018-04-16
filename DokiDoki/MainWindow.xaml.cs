@@ -27,7 +27,7 @@ namespace DokiDoki
     public partial class MainWindow : Window
     {
         public TcpClient client = new TcpClient();
-        private IPEndPoint ServerPass = new IPEndPoint(IPAddress.Loopback, 9999);
+        private IPEndPoint ServerPass = new IPEndPoint(IPAddress.Parse("192.168.1.1"), 9999);
         public MainWindow()
         {
             InitializeComponent();
@@ -57,7 +57,7 @@ namespace DokiDoki
 
             else
             {
-                client.Connect(new IPEndPoint(IPAddress.Loopback, 7777));
+                client.Connect(new IPEndPoint(IPAddress.Parse("192.168.1.1"), 7777));
 
                 string salt = "MP1Sfss==";
                 string username = tbx_username.Text;

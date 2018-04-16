@@ -23,7 +23,7 @@ namespace DokiDoki_Login_Server
             dbconnect();
             Console.WriteLine("Login Server Connected");
 
-            listen = new TcpListener(IPAddress.Loopback, 7777);
+            listen = new TcpListener(IPAddress.Parse("192.168.1.1"), 7777);
             listen.Start();
 
             Byte[] bytes = new Byte[1];

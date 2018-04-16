@@ -21,6 +21,7 @@ using System.Net.Sockets;
 using CSCore;
 using CSCore.SoundOut;
 using CSCore.Codecs.MP3;
+using System.Threading;
 
 namespace DokiDoki
 {
@@ -35,13 +36,16 @@ namespace DokiDoki
         private static TcpClient tcpClient;
         static string Name;
 
+        static HMemoryStream soundstrm = new HMemoryStream();
+        static bool played = false;
+
         public Rooms(IPEndPoint Server, string name)
         {
             InitializeComponent();
             Name = name;
             lbx_chat.ItemsSource = chat;
-            tcpClient = new TcpClient(new IPEndPoint(IPAddress.Loopback, 777));
-            tcpClient.Connect(new IPEndPoint(IPAddress.Loopback, 888));
+            tcpClient = new TcpClient(new IPEndPoint(IPAddress.Parse("192.168.1.1"), 777));
+            tcpClient.Connect(new IPEndPoint(IPAddress.Parse("192.168.1.1"), 888));
             StreamWriter sw = new StreamWriter(tcpClient.GetStream());
             StreamReader rdr = new StreamReader(tcpClient.GetStream());
             Task.Run(() =>
@@ -120,33 +124,31 @@ namespace DokiDoki
                                     Display(bmp);
                                 }
                             }
-
-                            //try { PlaySound(soundarr.ToArray()); } catch { }
+                            if (soundarr.Count > 0)
+                            {
+                                soundstrm.Write(soundarr.ToArray(), 0, soundarr.Count);
+                                if(!played)
+                                    PlaySound();
+                            }
                         }).Invoke(parts));
                     }
                 }
             });
         }
         private static IWaveSource GetSoundSource(Stream stream)
-        {
-            // Instead of using the CodecFactory as helper, you specify the decoder directly:            
+        {        
             return new DmoMp3Decoder(stream);
         }
-        public void PlaySound(byte[] snd)
+        public void PlaySound()
         {
-            using (var soundstrm = new MemoryStream(snd))
+            played = true;
+            using (IWaveSource soundSource = GetSoundSource(soundstrm))
             {
-                using (IWaveSource soundSource = GetSoundSource(soundstrm))
+                using (ISoundOut soundOut = new WasapiOut())
                 {
-                    using (ISoundOut soundOut = new WasapiOut())
-                    {
-                        soundOut.Volume = 1;
-                        soundOut.Initialize(soundSource);
-                        soundOut.Play();
-                        while (soundOut.PlaybackState == PlaybackState.Playing)
-                        { }
-                        soundOut.Stop();
-                    }
+                    soundOut.Volume = 1;
+                    soundOut.Initialize(soundSource);
+                    soundOut.Play();
                 }
             }
         }
@@ -188,6 +190,15 @@ namespace DokiDoki
                 chat.Add(Name + ": " + tbx_chat.Text);
                 tbx_chat.Text = "";
             }
+        }
+    }
+
+    public class HMemoryStream : MemoryStream
+    {
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            while(Position-Length < count) { }
+            return base.Read(buffer, offset, count);
         }
     }
 }

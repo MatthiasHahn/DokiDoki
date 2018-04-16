@@ -29,7 +29,7 @@ namespace DokiDoki_Server
         static EncoderParameters myEncoderParameters = new EncoderParameters(2);
         static MemoryStream ConverterStream = new MemoryStream();
         static IPEndPoint m = new IPEndPoint(IPAddress.Parse("224.168.55.25"), 8888);
-        static IPEndPoint local = new IPEndPoint(IPAddress.Any, 9999);
+        static IPEndPoint local = new IPEndPoint(IPAddress.Parse("192.168.1.1"), 9999);
         static System.Timers.Timer CaptureLoop;
 
         static List<byte> ScreenS;
