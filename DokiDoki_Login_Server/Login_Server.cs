@@ -53,28 +53,36 @@ namespace DokiDoki_Login_Server
                     Console.WriteLine(data);
                     string user = data.Split(';')[0];
                     string pass = data.Split(';')[1];
-                    string email = login ? "" : data.Split(';')[2];
-                    bool valid = login ? validate_login(user, pass) : validate_register(user, email); ;
-                    if(!login)
-                        Create_User(user, pass, email);
-                    if (valid)
-                    {
-                        byte[] msg = Encoding.ASCII.GetBytes("1");
-                        stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine(login ? "Message Valid" : "User created");
+                    bool validuser = validate_login(user, pass);
+                    bool validemail = validate_email(user, pass);
 
+                    string evuv = "01";
+                    string ev = "00";
+                    string uv = "11";
+
+                    if (validuser && validemail)
+                    {
+                        byte[] msg = Encoding.ASCII.GetBytes(evuv);
+                        stream.Write(msg, 0, msg.Length);
+                        Console.WriteLine("User and Email Valid");
+
+                    }
+
+                    else if (validuser && !validemail)
+                    {
+                        byte[] msg = Encoding.ASCII.GetBytes(uv);
+                        stream.Write(msg, 0, msg.Length);
+                        Console.WriteLine("Email UnValid");
                     }
 
                     else
                     {
-                        byte[] msg = Encoding.ASCII.GetBytes("0");
+                        byte[] msg = Encoding.ASCII.GetBytes(ev);
                         stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine(login ? "Message UnValid" : "User already exists");
+                        Console.WriteLine("User UnValid");
                     }
                 }
             }
-
-        }
 
         private static void Create_User(string user, string pass, string email)
         {
@@ -116,28 +124,27 @@ namespace DokiDoki_Login_Server
                 return false;
             }
         }
-
-        private static bool validate_register(string user, string email)
+        private static bool validate_email(string user, string pass)
         {
             dbconnect();
             MySqlCommand cmd = new MySqlCommand();
-            cmd.CommandText = "Select * from users where username=@user or email=@email";
+            cmd.CommandText = "Select * from users where username=@user and password=@pass and ev=1";
             cmd.Parameters.AddWithValue("@user", user);
-            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@pass", pass);
             cmd.Connection = connect;
             MySqlDataReader login = cmd.ExecuteReader();
 
 
 
-            if (login.HasRows)
+            if (login.Read())
             {
                 connect.Close();
-                return false;
+                return true;
             }
             else
             {
                 connect.Close();
-                return true;
+                return false;
             }
         }
     }

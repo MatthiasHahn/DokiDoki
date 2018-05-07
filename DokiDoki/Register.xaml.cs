@@ -25,6 +25,7 @@ namespace DokiDoki
     public partial class Register : Window
     {
         
+        public  int code;  
         public Register()
         {
             InitializeComponent();
@@ -114,12 +115,18 @@ namespace DokiDoki
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responsedata = Encoding.ASCII.GetString(data, 0, bytes);
 
+                string trfl = responsedata.Split(';')[0];
+                if (trfl == "1")
+                {
+                    code = Convert.ToInt32(responsedata.Split(';')[1]);
+                }
+
 
 
                 stream.Close();
                 client.Close();
 
-                if (responsedata == "1")
+                if (trfl == "1")
                 {
                     servervalid = true;
                 }
@@ -131,6 +138,8 @@ namespace DokiDoki
                 if (servervalid)
                 {
                     Email_Verify ev = new Email_Verify();
+                    ev.code = code;
+                    ev.email = email;
                     ev.Show();
                     Close();
                 }
