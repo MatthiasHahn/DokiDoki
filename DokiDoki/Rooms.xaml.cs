@@ -32,7 +32,7 @@ namespace DokiDoki
     public partial class Rooms : Window
     {
         static IPEndPoint m = new IPEndPoint(IPAddress.Parse("224.168.55.25"), 8888);
-        static IPEndPoint local = new IPEndPoint(IPAddress.Parse("192.168.1.10"), 8888);
+        static IPEndPoint local = new IPEndPoint(IPAddress.Loopback, 8888); //IP_CHG 192.168.1.10
         static ObservableCollection<string> chat = new ObservableCollection<string>();
         private static TcpClient tcpClient;
         static string Name;
@@ -46,8 +46,8 @@ namespace DokiDoki
             InitializeComponent();
             Name = name;
             lbx_chat.ItemsSource = chat;
-            tcpClient = new TcpClient(new IPEndPoint(IPAddress.Parse("192.168.1.1"), 0));
-            tcpClient.Connect(new IPEndPoint(IPAddress.Parse("192.168.1.1"), 888));
+            tcpClient = new TcpClient(new IPEndPoint(IPAddress.Loopback, 0)); //IP_CHG 192.168.1.1
+            tcpClient.Connect(new IPEndPoint(IPAddress.Loopback, 888)); //IP_CHG 192.168.1.1
             StreamWriter sw = new StreamWriter(tcpClient.GetStream());
             StreamReader rdr = new StreamReader(tcpClient.GetStream());
             Task.Run(() =>
@@ -82,7 +82,7 @@ namespace DokiDoki
                     List<byte[]> parts = new List<byte[]>();
                     byte[] buffer = new byte[1];
                     byte[] sbuffer = new byte[1];
-                    try { socket.Receive(buffer); socket.Receive(sbuffer); }
+                    try { socket.Receive(buffer); /*socket.Receive(sbuffer);*/ }
                     catch (Exception ex)
                     { exep = true; }
                     if (!exep)
@@ -98,14 +98,14 @@ namespace DokiDoki
                         socket.Receive(buffer);
                         parts.Add(buffer);
 
-                        List<byte[]> soundparts = new List<byte[]>();
-                        count = Convert.ToInt32(sbuffer[0]);
-                        for (int i = 0; i < count; i++)
-                        {
-                            buffer = new byte[32000];
-                            socket.Receive(buffer);
-                            soundparts.Add(buffer);
-                        }
+                        //List<byte[]> soundparts = new List<byte[]>();
+                        //count = Convert.ToInt32(sbuffer[0]);
+                        //for (int i = 0; i < count; i++)
+                        //{
+                        //    buffer = new byte[32000];
+                        //    socket.Receive(buffer);
+                        //    soundparts.Add(buffer);
+                        //}
 
                         Task.Run(() => new Action<List<byte[]>>((prts) =>
                         {
@@ -113,9 +113,9 @@ namespace DokiDoki
                             foreach (var b in prts)
                                 arr.AddRange(b);
 
-                            List<byte> soundarr = new List<byte>();
-                            foreach (var b in soundparts)
-                                soundarr.AddRange(b);
+                            //List<byte> soundarr = new List<byte>();
+                            //foreach (var b in soundparts)
+                            //    soundarr.AddRange(b);
 
                             if (arr.Count > 0 && arr[0] == 255 && arr[1] == 216)
                             {
@@ -126,19 +126,19 @@ namespace DokiDoki
                                     Display(bmp);
                                 }
                             }
-                            if (soundarr.Count > 10 && soundstrm.CanWrite)
-                            {
-                                rdrpos = soundstrm.Position;
-                                soundstrm.Position = wrtpos;
+                            //if (soundarr.Count > 10 && soundstrm.CanWrite)
+                            //{
+                            //    rdrpos = soundstrm.Position;
+                            //    soundstrm.Position = wrtpos;
 
-                                soundstrm.Write(soundarr.ToArray(), 0, soundarr.Count);
+                            //    soundstrm.Write(soundarr.ToArray(), 0, soundarr.Count);
 
-                                wrtpos = soundstrm.Position;
-                                soundstrm.Position = rdrpos;
+                            //    wrtpos = soundstrm.Position;
+                            //    soundstrm.Position = rdrpos;
 
-                                if(!played)
-                                    PlaySound();
-                            }
+                            //    if(!played)
+                            //        PlaySound();
+                            //}
                         }).Invoke(parts));
                     }
                 }
@@ -178,20 +178,28 @@ namespace DokiDoki
 
         private void img_disp_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (wnd_main.WindowState == WindowState.Normal)
-            {
-                wnd_main.WindowState = WindowState.Maximized;
-                wnd_main.WindowStyle = WindowStyle.None;
-                img_disp.Margin = new Thickness(0);
-            }
-            else
-            {
-                wnd_main.WindowState = WindowState.Normal;
-                wnd_main.WindowStyle = WindowStyle.SingleBorderWindow;
-                img_disp.Margin = new Thickness(10, 10, 10, 210);
-            }
+            var pos = e.GetPosition(img_disp);
+            var r = new System.Windows.Shapes.Rectangle();
+            r.Width = r.Height = 10;
+            r.Fill = System.Windows.Media.Brushes.Red;
+            r.VerticalAlignment = VerticalAlignment.Top;
+            r.HorizontalAlignment = HorizontalAlignment.Left;
+            r.Margin = new Thickness(pos.X + r.Width, pos.Y + r.Height, 0, 0);
+            grd_main.Children.Add(r);
+            LeftMouseClick((int)pos.X+734+10, (int)pos.Y+17+200);
+            //if (wnd_main.WindowState == WindowState.Normal)
+            //{
+            //    wnd_main.WindowState = WindowState.Maximized;
+            //    wnd_main.WindowStyle = WindowStyle.None;
+            //    img_disp.Margin = new Thickness(0);
+            //}
+            //else
+            //{
+            //    wnd_main.WindowState = WindowState.Normal;
+            //    wnd_main.WindowStyle = WindowStyle.SingleBorderWindow;
+            //    img_disp.Margin = new Thickness(10, 10, 10, 210);
+            //}
         }
-
 
         private void tbx_chat_KeyDown(object sender, KeyEventArgs e)
         {
@@ -200,6 +208,22 @@ namespace DokiDoki
                 chat.Add(Name + ": " + tbx_chat.Text);
                 tbx_chat.Text = "";
             }
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern bool SetCursorPos(int x, int y);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
+
+        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        public const int MOUSEEVENTF_LEFTUP = 0x04;
+
+        public static void LeftMouseClick(int xpos, int ypos)
+        {
+            SetCursorPos(xpos, ypos);
+            mouse_event(MOUSEEVENTF_LEFTDOWN, xpos, ypos, 0, 0);
+            mouse_event(MOUSEEVENTF_LEFTUP, xpos, ypos, 0, 0);
         }
     }
 }

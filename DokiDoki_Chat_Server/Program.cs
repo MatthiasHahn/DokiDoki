@@ -11,7 +11,7 @@ namespace DokiDoki_Chat_Server
 {
     class Program
     {
-        private static TcpListener tcpListener = new TcpListener(new IPEndPoint(IPAddress.Parse("192.168.1.1"), 888));
+        private static TcpListener tcpListener = new TcpListener(new IPEndPoint(IPAddress.Loopback, 888)); //IP_CHG 192.168.1.1
         static List<TcpClient> clnt_list = new List<TcpClient>();
 
         static void Main(string[] args)

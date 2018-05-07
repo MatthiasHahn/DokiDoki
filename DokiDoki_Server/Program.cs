@@ -23,14 +23,14 @@ namespace DokiDoki_Server
     {
         static Socket socket;
         static MemoryStream soundarr = new MemoryStream();
-        static WasapiCapture cptr;
+        //static WasapiCapture cptr;
 
         static ImageConverter con = new ImageConverter();
         static ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
         static EncoderParameters myEncoderParameters = new EncoderParameters(2);
         static MemoryStream ConverterStream = new MemoryStream();
         static IPEndPoint m = new IPEndPoint(IPAddress.Parse("224.168.55.25"), 8888);
-        static IPEndPoint local = new IPEndPoint(IPAddress.Parse("192.168.1.1"), 9999);
+        static IPEndPoint local = new IPEndPoint(IPAddress.Loopback, 9999); //IP_CHG 192.168.1.1
         static System.Timers.Timer CaptureLoop;
 
         static List<byte> ScreenS;
@@ -45,15 +45,15 @@ namespace DokiDoki_Server
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(m.Address, local.Address));
             string procid = Console.ReadLine();
 
-            WaveFormat format = new WaveFormat(4000, 6, 1);
-            cptr = new WasapiLoopbackCapture(10, format, ThreadPriority.AboveNormal, true);
-            WaveWriter wrt = new WaveWriter(soundarr, cptr.WaveFormat);
-            cptr.Initialize();
-            cptr.DataAvailable += (s, e) =>
-            {
-                wrt.Write(e.Data, e.Offset, e.ByteCount);
-            };
-            cptr.Start();
+            //WaveFormat format = new WaveFormat(4000, 6, 1);
+            //cptr = new WasapiLoopbackCapture(10, format, ThreadPriority.AboveNormal, true);
+            //WaveWriter wrt = new WaveWriter(soundarr, cptr.WaveFormat);
+            //cptr.Initialize();
+            //cptr.DataAvailable += (s, e) =>
+            //{
+            //    wrt.Write(e.Data, e.Offset, e.ByteCount);
+            //};
+            //cptr.Start();
 
             var procs = Process.GetProcessesByName(procid);
             Process proc = null;
@@ -61,7 +61,7 @@ namespace DokiDoki_Server
             foreach (var prc in procs)
             {
                 User.GetWindowRect(prc.MainWindowHandle, ref rect);
-                if ((rect.left != 0 && rect.right != 0) || (rect.bottom != 0 && rect.top != 0))
+                if ((rect.left != 0 || rect.right != 0) || (rect.bottom != 0 || rect.top != 0))
                 {
                     proc = prc;
                     break;
@@ -85,9 +85,9 @@ namespace DokiDoki_Server
         {
             var rect = new User.RECT();
             User.GetWindowRect(proc.MainWindowHandle, ref rect);
-            using (var bmp = new Bitmap(rect.right - rect.left, rect.bottom - rect.top, System.Drawing.Imaging.PixelFormat.Format16bppRgb555))
+            using (var bmp = new Bitmap(rect.right - rect.left-20, rect.bottom - rect.top - 50, System.Drawing.Imaging.PixelFormat.Format16bppRgb555))
             {
-                Graphics.FromImage(bmp).CopyFromScreen(rect.left, rect.top, 0, 0, new System.Drawing.Size(rect.right - rect.left, rect.bottom - rect.top), CopyPixelOperation.SourceCopy);
+                Graphics.FromImage(bmp).CopyFromScreen(rect.left+10, rect.top+40, 0, 0, new System.Drawing.Size(rect.right - rect.left-20, rect.bottom - rect.top - 50), CopyPixelOperation.SourceCopy);
                 ScreenS = ConvertTo(bmp);
             }           
             /*
@@ -134,27 +134,27 @@ namespace DokiDoki_Server
                     arr.GetRange(i, partsize).ToArray() :
                     arr.GetRange(i, arr.Count - i).ToArray());
             }
-            
-            List<byte[]> soundparts = new List<byte[]>();
-            List<byte> soundar = soundarr.ToArray().ToList();
-            soundarr = new MemoryStream();
-            for (int i = 0; i < soundar.Count; i += partsize)
-            {
-                soundparts.Add(i + partsize <= soundar.Count ?
-                    soundar.GetRange(i, partsize).ToArray() :
-                    soundar.GetRange(i, soundar.Count - i).ToArray());
-            }            
-            Console.WriteLine("Parts: " + parts.Count + ", Arr: " + arr.Count + " | Sound_Parts: " + soundparts.Count + ", Sound_Arr: " + soundar.Count);
+
+            //List<byte[]> soundparts = new List<byte[]>();
+            //List<byte> soundar = soundarr.ToArray().ToList();
+            //soundarr = new MemoryStream();
+            //for (int i = 0; i < soundar.Count; i += partsize)
+            //{
+            //    soundparts.Add(i + partsize <= soundar.Count ?
+            //        soundar.GetRange(i, partsize).ToArray() :
+            //        soundar.GetRange(i, soundar.Count - i).ToArray());
+            //}            
+            Console.WriteLine("Parts: " + parts.Count + ", Arr: " + arr.Count);// + " | Sound_Parts: " + soundparts.Count + ", Sound_Arr: " + soundar.Count);
             
 
             socket.SendTo(new byte[] { Convert.ToByte(parts.Count) }, m);
-            socket.SendTo(new byte[] { Convert.ToByte(soundparts.Count) }, m);
+            //socket.SendTo(new byte[] { Convert.ToByte(soundparts.Count) }, m);
 
             foreach (var p in parts)
                 socket.SendTo(p,m);
             
-            foreach (var p in soundparts)
-                socket.SendTo(p, m);
+            //foreach (var p in soundparts)
+            //    socket.SendTo(p, m);
 
             return Task.FromResult(true);
         }

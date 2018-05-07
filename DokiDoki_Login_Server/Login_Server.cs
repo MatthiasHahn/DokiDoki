@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using MySql.Data.MySqlClient;
 //using MySql.Data;
 //using MySql.Data.MySqlClient;
 
@@ -23,7 +24,7 @@ namespace DokiDoki_Login_Server
             dbconnect();
             Console.WriteLine("Login Server Connected");
 
-            listen = new TcpListener(IPAddress.Parse("192.168.1.1"), 7777);
+            listen = new TcpListener(IPAddress.Loopback, 7777); //IP_CHG 192.168.1.1
             listen.Start();
 
             Byte[] bytes = new Byte[1];
