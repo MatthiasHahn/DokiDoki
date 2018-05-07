@@ -15,13 +15,14 @@ using CSCore.Codecs.MP3;
 using CSCore.SoundIn;
 using System.Threading;
 using System.Windows.Threading;
+using CSCore.Codecs.WAV;
 
 namespace DokiDoki_Server
 {
     class Program
     {
         static Socket socket;
-        static List<byte> soundarr = new List<byte>();
+        static MemoryStream soundarr = new MemoryStream();
         static WasapiCapture cptr;
 
         static ImageConverter con = new ImageConverter();
@@ -35,21 +36,22 @@ namespace DokiDoki_Server
         static List<byte> ScreenS;
         static void Main(string[] args)
         {
-            myEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 50L);
+            myEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 30L);
             myEncoderParameters.Param[1] = new EncoderParameter(System.Drawing.Imaging.Encoder.Compression, 1L);
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.MulticastLoopback = true;
             socket.Bind(local);
-            socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(m.Address, IPAddress.Any));
+            socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(m.Address, local.Address));
             string procid = Console.ReadLine();
-            
-            Mp3Format format = new Mp3Format(4000, 1, 100, 8);
+
+            WaveFormat format = new WaveFormat(4000, 6, 1);
             cptr = new WasapiLoopbackCapture(10, format, ThreadPriority.AboveNormal, true);
+            WaveWriter wrt = new WaveWriter(soundarr, cptr.WaveFormat);
             cptr.Initialize();
             cptr.DataAvailable += (s, e) =>
             {
-                soundarr.AddRange(e.Data);
+                wrt.Write(e.Data, e.Offset, e.ByteCount);
             };
             cptr.Start();
 
@@ -134,14 +136,16 @@ namespace DokiDoki_Server
             }
             
             List<byte[]> soundparts = new List<byte[]>();
-            for (int i = 0; i < soundarr.Count; i += partsize)
+            List<byte> soundar = soundarr.ToArray().ToList();
+            soundarr = new MemoryStream();
+            for (int i = 0; i < soundar.Count; i += partsize)
             {
-                soundparts.Add(i + partsize <= soundarr.Count ?
-                    soundarr.GetRange(i, partsize).ToArray() :
-                    soundarr.GetRange(i, soundarr.Count - i).ToArray());
+                soundparts.Add(i + partsize <= soundar.Count ?
+                    soundar.GetRange(i, partsize).ToArray() :
+                    soundar.GetRange(i, soundar.Count - i).ToArray());
             }            
-            Console.WriteLine("Parts: " + parts.Count + ", Arr: " + arr.Count + " | Sound_Parts: " + soundparts.Count + ", Sound_Arr: " + soundarr.Count);
-            soundarr = new List<byte>();
+            Console.WriteLine("Parts: " + parts.Count + ", Arr: " + arr.Count + " | Sound_Parts: " + soundparts.Count + ", Sound_Arr: " + soundar.Count);
+            
 
             socket.SendTo(new byte[] { Convert.ToByte(parts.Count) }, m);
             socket.SendTo(new byte[] { Convert.ToByte(soundparts.Count) }, m);

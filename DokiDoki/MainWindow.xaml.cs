@@ -31,6 +31,11 @@ namespace DokiDoki
         public MainWindow()
         {
             InitializeComponent();
+
+            Rooms rm = new Rooms(ServerPass, tbx_username.Text);
+            rm.Show();
+            Close();
+
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
@@ -49,7 +54,7 @@ namespace DokiDoki
             lbl_error_disp.BeginAnimation(OpacityProperty, anim);
         }
         private void img_next_MouseDown(object sender, MouseButtonEventArgs e)
-        {           
+        {   
             if (tbx_username.Text == "" || tbx_username.Text.Length <= 4 || passbox.Password == "" || passbox.Password.Length <= 4)
             {
                 ErrDisp();
@@ -91,6 +96,7 @@ namespace DokiDoki
                 }
                 if (trfr)
                 {
+
                     Rooms rm = new Rooms(ServerPass, tbx_username.Text);
                     rm.Show();
                     Close();
