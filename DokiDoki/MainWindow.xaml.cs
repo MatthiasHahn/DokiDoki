@@ -32,9 +32,9 @@ namespace DokiDoki
         {
             InitializeComponent();
 
-            Rooms rm = new Rooms(ServerPass, tbx_username.Text);
-            rm.Show();
-            Close();
+            //Rooms rm = new Rooms(ServerPass, tbx_username.Text);
+            //rm.Show();
+            //Close();
 
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }

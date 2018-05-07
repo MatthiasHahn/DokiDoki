@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using MySql.Data.MySqlClient;
+using System.Net.Mail;
 //using MySql.Data;
 //using MySql.Data.MySqlClient;
 
@@ -74,7 +75,18 @@ namespace DokiDoki_Login_Server
                         stream.Write(msg, 0, msg.Length);
                         Console.WriteLine("Email UnValid");
                     }
+                    else if(!login && !validuser && !validemail)
+                    {
+                        Random rnd = new Random();
+                        int code = rnd.Next(100000, 999999);
+                        Create_User(user, pass, data.Split(';')[2]);
+                        Console.WriteLine("User Created");
 
+                        SendMail(data.Split(';')[2], code.ToString());
+                        
+                        byte[] msg = Encoding.ASCII.GetBytes("1;"+code);
+                        stream.Write(msg, 0, msg.Length);
+                    }
                     else
                     {
                         byte[] msg = Encoding.ASCII.GetBytes(ev);
@@ -146,6 +158,23 @@ namespace DokiDoki_Login_Server
                 connect.Close();
                 return false;
             }
+        }
+
+        private static void SendMail(string email, string code)
+        {
+            MailMessage mail = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+
+            mail.From = new MailAddress("noreply.dokidoki@gmail.com");
+            mail.To.Add(email);
+            mail.Subject = "Your Code [Doki Doki]";
+            mail.Body = "Here is your code: " + code.ToString();
+
+            SmtpServer.Port = 25;
+            SmtpServer.Credentials = new System.Net.NetworkCredential("noreply.dokidoki@gmail.com", "noreplydokidoki");
+            SmtpServer.EnableSsl = true;
+
+            SmtpServer.Send(mail);
         }
     }
 }

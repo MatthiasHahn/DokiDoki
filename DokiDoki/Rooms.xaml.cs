@@ -186,7 +186,7 @@ namespace DokiDoki
             r.HorizontalAlignment = HorizontalAlignment.Left;
             r.Margin = new Thickness(pos.X + r.Width, pos.Y + r.Height, 0, 0);
             grd_main.Children.Add(r);
-            LeftMouseClick((int)pos.X+734+10, (int)pos.Y+17+200);
+            LeftMouseClick((int)pos.X+1046+10, (int)pos.Y+201+25);
             //if (wnd_main.WindowState == WindowState.Normal)
             //{
             //    wnd_main.WindowState = WindowState.Maximized;

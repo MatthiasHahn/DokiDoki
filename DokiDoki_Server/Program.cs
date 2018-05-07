@@ -77,7 +77,7 @@ namespace DokiDoki_Server
             CaptureLoop.Elapsed += (sender, e) => { Send(ScreenS); };
             CaptureLoop.Start();
             while(true)
-            {
+            {                
                 Capture(proc);
             } 
         }
@@ -85,11 +85,14 @@ namespace DokiDoki_Server
         {
             var rect = new User.RECT();
             User.GetWindowRect(proc.MainWindowHandle, ref rect);
-            using (var bmp = new Bitmap(rect.right - rect.left-20, rect.bottom - rect.top - 50, System.Drawing.Imaging.PixelFormat.Format16bppRgb555))
+            if (rect.top >= 0 && rect.bottom >= 0 && rect.left >= 0 && rect.right >= 0)
             {
-                Graphics.FromImage(bmp).CopyFromScreen(rect.left+10, rect.top+40, 0, 0, new System.Drawing.Size(rect.right - rect.left-20, rect.bottom - rect.top - 50), CopyPixelOperation.SourceCopy);
-                ScreenS = ConvertTo(bmp);
-            }           
+                using (var bmp = new Bitmap(rect.right - rect.left - 20, rect.bottom - rect.top - 50, System.Drawing.Imaging.PixelFormat.Format16bppRgb555))
+                {
+                    Graphics.FromImage(bmp).CopyFromScreen(rect.left + 10, rect.top + 40, 0, 0, new System.Drawing.Size(rect.right - rect.left - 20, rect.bottom - rect.top - 50), CopyPixelOperation.SourceCopy);
+                    ScreenS = ConvertTo(bmp);
+                }
+            }
             /*
             DateTime fps_lock = DateTime.Now;
             while (true)
