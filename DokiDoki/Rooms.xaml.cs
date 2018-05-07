@@ -32,7 +32,7 @@ namespace DokiDoki
     public partial class Rooms : Window
     {
         static IPEndPoint m = new IPEndPoint(IPAddress.Parse("224.168.55.25"), 8888);
-        static IPEndPoint local = new IPEndPoint(IPAddress.Any, 8888);
+        static IPEndPoint local = new IPEndPoint(IPAddress.Parse("192.168.1.10"), 8888);
         static ObservableCollection<string> chat = new ObservableCollection<string>();
         private static TcpClient tcpClient;
         static string Name;
