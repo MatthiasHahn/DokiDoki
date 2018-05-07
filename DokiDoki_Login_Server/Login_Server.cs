@@ -83,7 +83,7 @@ namespace DokiDoki_Login_Server
                     }
                 }
             }
-
+        }
         private static void Create_User(string user, string pass, string email)
         {
             dbconnect();
