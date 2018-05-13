@@ -10,9 +10,9 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using CSCore;
-using CSCore.Codecs.WAV;
-using CSCore.SoundIn;
+//using CSCore;
+//using CSCore.Codecs.WAV;
+//using CSCore.SoundIn;
 using System.Threading;
 
 namespace DokiDoki_Server
@@ -33,19 +33,16 @@ namespace DokiDoki_Server
             myEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 30L);
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-<<<<<<< HEAD
-            localEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.10"), 9999);
+            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.10"), 9999);
             socket.Bind(localEndPoint);
             EndPoint remoteEP = new IPEndPoint(IPAddress.Any, 8888);
             socket.SendBufferSize = 819200;
             byte[] buffer = new byte[3];
             socket.ReceiveFrom(buffer, ref remoteEP);
             socket.Connect(remoteEP);
-=======
             socket.MulticastLoopback = true;
             socket.Bind(local);
             socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(m.Address, IPAddress.Any));
->>>>>>> 83113d06500df8504a32b7bf286cad2439c34e4c
             string procid = Console.ReadLine();
 
             /*WaveFormat waveFormat = new WaveFormat(4000, 8, 1, AudioEncoding.Gsm);
@@ -78,11 +75,8 @@ namespace DokiDoki_Server
             DateTime fps_lock = DateTime.Now;    
             while (true)
             {
-<<<<<<< HEAD
                 if ((DateTime.Now - fps_lock).Milliseconds >= 15)
-=======
                 if ((DateTime.Now - fps_lock).Milliseconds >= 16)
->>>>>>> 83113d06500df8504a32b7bf286cad2439c34e4c
                 {
                     User.GetWindowRect(proc.MainWindowHandle, ref rect);
                     using (var bmp = new Bitmap(rect.right - rect.left, rect.bottom - rect.top, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
@@ -91,7 +85,7 @@ namespace DokiDoki_Server
                         fps_lock = DateTime.Now;
                         Send(bmp);
                     }                    
-                }/
+                }
             }
         }
         private static ImageCodecInfo GetEncoder(ImageFormat format)

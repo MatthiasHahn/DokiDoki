@@ -18,6 +18,8 @@ using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Net;
 using System.Net.Sockets;
+using System.Windows.Controls;
+using Image = System.Drawing.Image;
 
 namespace DokiDoki
 {
@@ -38,7 +40,7 @@ namespace DokiDoki
             Name = name;
             lbx_chat.ItemsSource = chat;
             tcpClient = new TcpClient(new IPEndPoint(IPAddress.Loopback, 777));
-            tcpClient.Connect(new IPEndPoint(IPAddress.Loopback, 888));
+            tcpClient.Connect(new IPEndPoint(IPAddress.Loopback, 887));
             StreamWriter sw = new StreamWriter(tcpClient.GetStream());
             StreamReader rdr = new StreamReader(tcpClient.GetStream());
             Task.Run(() =>
@@ -52,12 +54,22 @@ namespace DokiDoki
             chat.CollectionChanged +=
                 new NotifyCollectionChangedEventHandler((object sender, NotifyCollectionChangedEventArgs e) =>
                 {
-                    lbx_chat.ScrollIntoView(lbx_chat.Items[lbx_chat.Items.Count - 1]);                    
+                    Decorator border = VisualTreeHelper.GetChild(lbx_chat, 0) as Decorator;
+                    if (border != null)
+                    {
+                        ScrollViewer scrollViewer = border.Child as ScrollViewer;
+                        if (scrollViewer != null)
+                        {
+                            scrollViewer.ScrollToBottom();
+                        }
+                    }
+                    //lbx_chat.ScrollIntoView(lbx_chat.Items[lbx_chat.Items.Count - 1]);            
                     foreach (var i in e.NewItems)
                         if (i.ToString().Split(':')[0] == Name)
                             sw.WriteLine(i);
                     sw.Flush();
                 });
+
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.MulticastLoopback = true;
             socket.Bind(local);
@@ -81,12 +93,12 @@ namespace DokiDoki
                         }
                         List<byte> arr = new List<byte>();
                         foreach (var b in parts)
-                            foreach (var bb in b)
-                                arr.Add(bb);
+                        foreach (var bb in b)
+                            arr.Add(bb);
                         Bitmap bmp;
                         using (var ms = new MemoryStream(arr.ToArray()))
                         {
-                            bmp = (Bitmap)Image.FromStream(ms);
+                            bmp = (Bitmap) Image.FromStream(ms);
                         }
                         Display(bmp);
                     }

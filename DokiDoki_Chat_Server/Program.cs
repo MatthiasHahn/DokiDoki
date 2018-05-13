@@ -11,7 +11,7 @@ namespace DokiDoki_Chat_Server
 {
     class Program
     {
-        private static TcpListener tcpListener = new TcpListener(new IPEndPoint(IPAddress.Loopback, 888));
+        private static TcpListener tcpListener = new TcpListener(new IPEndPoint(IPAddress.Loopback, 887));
         static List<TcpClient> clnt_list = new List<TcpClient>();
 
         static void Main(string[] args)
@@ -41,6 +41,7 @@ namespace DokiDoki_Chat_Server
                             }
                         wrt2.WriteLine("Server: Accepted");
                         wrt2.Flush();
+                    }
                 });
             }
         }

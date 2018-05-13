@@ -57,49 +57,49 @@ namespace DokiDoki
 
             else
             {
-                client.Connect(new IPEndPoint(IPAddress.Loopback, 7777));
+                //client.Connect(new IPEndPoint(IPAddress.Loopback, 7777));
 
-                string salt = "MP1Sfss==";
-                string username = tbx_username.Text;
-                string passwordNoP = passbox.Password.GetHashCode().ToString();
-                string pepper = username.Substring(username.Length - 4) + passwordNoP.Substring(passwordNoP.Length - 4);
-                string password = Convert.ToBase64String(Encoding.UTF8.GetBytes((salt + passwordNoP + pepper).GetHashCode().ToString()));
-                passbox.Password = "";
+                //string salt = "MP1Sfss==";
+                //string username = tbx_username.Text;
+                //string passwordNoP = passbox.Password.GetHashCode().ToString();
+                //string pepper = username.Substring(username.Length - 4) + passwordNoP.Substring(passwordNoP.Length - 4);
+                //string password = Convert.ToBase64String(Encoding.UTF8.GetBytes((salt + passwordNoP + pepper).GetHashCode().ToString()));
+                //passbox.Password = "";
                                 
-                Byte[] data = Encoding.ASCII.GetBytes(username + ";" + password);
-                NetworkStream stream = client.GetStream();
-                stream.Write(new byte[] { 0 },0, 1);
-                stream.Flush();
+                //Byte[] data = Encoding.ASCII.GetBytes(username + ";" + password);
+                //NetworkStream stream = client.GetStream();
+                //stream.Write(new byte[] { 0 },0, 1);
+                //stream.Flush();
 
-                stream.Write(data, 0, data.Length);
-                data = new Byte[256];
-                string responsedata = string.Empty;
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responsedata = Encoding.ASCII.GetString(data, 0, bytes);
+                //stream.Write(data, 0, data.Length);
+                //data = new Byte[256];
+                //string responsedata = string.Empty;
+                //Int32 bytes = stream.Read(data, 0, data.Length);
+                //responsedata = Encoding.ASCII.GetString(data, 0, bytes);
 
-                stream.Close();
-                client.Close();
+                //stream.Close();
+                //client.Close();
                 
-                bool trfr;
-                if (responsedata == "1")
-                {
-                    trfr = true;
-                }
-                else
-                {
-                    trfr = false;
-                }
-                if (trfr)
-                {
+                //bool trfr;
+                //if (responsedata == "1")
+                //{
+                //    trfr = true;
+                //}
+                //else
+                //{
+                //    trfr = false;
+                //}
+                //if (trfr)
+                //{
                     Rooms rm = new Rooms(ServerPass, tbx_username.Text);
                     rm.Show();
                     Close();
-                }
-                else
-                {
-                    ErrDisp();
-                    client = new TcpClient();
-                }
+                //}
+                //else
+                //{
+                //    ErrDisp();
+                //    client = new TcpClient();
+                //}
             }
         }
 
