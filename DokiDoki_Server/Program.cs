@@ -114,8 +114,8 @@ namespace DokiDoki_Server
                                 double X = ConvertFuckThisToDoubleFuckMeAIDSFUCK(msg.Split(';')[0].Replace(',', '.'));
                                 double Y = ConvertFuckThisToDoubleFuckMeAIDSFUCK(msg.Split(';')[1].Replace(',', '.'));
 
-                                double X_Off = (X / width)*(own_width-r.left-r.right);
-                                double Y_Off = (Y / height)*(own_height-r.top-r.bottom);
+                                double X_Off = ((X+10) / width)*(r.right - r.left);
+                                double Y_Off = ((Y+10) / height)*(r.bottom-r.top);
 
                                 //X;Y
                                 LeftMouseClick((int)X_Off + r.left, (int)Y_Off + r.top);

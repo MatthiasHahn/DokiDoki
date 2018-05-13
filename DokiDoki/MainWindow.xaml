@@ -12,7 +12,7 @@
     <Grid>
 
         <Label x:Name="lbl_deko_username" Content="Username" HorizontalAlignment="Left" Margin="21,18,0,0" VerticalAlignment="Top" Height="26" Width="138" FontSize="15" Background="{x:Null}" Foreground="White" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold"/>
-        <TextBox x:Name="tbx_username" Margin="30,44,0,0" BorderBrush="{x:Null}" Foreground="White" FontSize="18" FontFamily="Arctic" SelectionBrush="White" VerticalAlignment="Top" HorizontalAlignment="Left" Width="176" Height="18" Background="#4CFFFFFF"/>
+        <TextBox x:Name="tbx_username" Margin="30,44,0,0" BorderBrush="{x:Null}" Foreground="White" FontSize="12" FontFamily="Arctic" SelectionBrush="White" VerticalAlignment="Top" HorizontalAlignment="Left" Width="176" Height="18" Background="#4CFFFFFF"/>
         <Label x:Name="lbl_deko_pass" Content="Password" HorizontalAlignment="Left" Margin="21,76,0,0" VerticalAlignment="Top" Height="26" Width="128" FontSize="15" Background="{x:Null}" Foreground="White" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold"/>
         <PasswordBox x:Name="passbox" HorizontalAlignment="Left" Margin="30,102,0,0" VerticalAlignment="Top" Width="176" Height="18" BorderBrush="{x:Null}" Background="#4CFFFFFF" Foreground="White" SelectionBrush="White" FontSize="14" FontFamily="Arctic" KeyDown="passbox_KeyDown"/>
         <Label x:Name="lbl_deko_next" Content="Next" HorizontalAlignment="Left" Margin="346,164,0,0" VerticalAlignment="Top" Height="28" Width="64" FontSize="19" Background="{x:Null}" Foreground="White" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold" Opacity="0.8"/>
@@ -21,7 +21,7 @@
         <Label x:Name="lbl_error_disp" Content="Invalid Input" HorizontalAlignment="Left" Margin="234,130,0,0" VerticalAlignment="Top" Height="30" Width="192" FontSize="15" Background="#4C000000" Foreground="Red" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold" Opacity="0"/>
         <Label x:Name="lbl_deko_noaccount" Content="Don't have an account yet?" HorizontalAlignment="Left" Margin="51,180,0,0" VerticalAlignment="Top" Height="21" Width="161" MouseEnter="lbl_deko_noaccount_MouseEnter" MouseLeave="lbl_deko_noaccount_MouseLeave" MouseDown="lbl_deko_noaccount_MouseDown" FontSize="10" Background="{x:Null}" Foreground="White" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" Opacity="0.4"/>
         <Label x:Name="lbl_deko_server_port" Content="Server / Port" HorizontalAlignment="Left" Margin="21,130,0,0" VerticalAlignment="Top" Height="26" Width="128" FontSize="15" Background="{x:Null}" Foreground="White" FontFamily="/DokiDoki;component/Fonts/#Nasalization Rg" FontWeight="Bold"/>
-        <TextBox x:Name="tbx_serverip" Margin="30,156,0,0" BorderBrush="{x:Null}" Foreground="White" FontSize="18" FontFamily="Arctic" SelectionBrush="White" VerticalAlignment="Top" HorizontalAlignment="Left" Width="91" Height="18" Background="#4CFFFFFF"/>
-        <TextBox x:Name="tbx_port" Margin="138,156,0,0" BorderBrush="{x:Null}" Foreground="White" FontSize="18" FontFamily="Arctic" SelectionBrush="White" VerticalAlignment="Top" HorizontalAlignment="Left" Width="49" Height="18" Background="#4CFFFFFF"/>
+        <TextBox x:Name="tbx_serverip" Margin="30,156,0,0" BorderBrush="{x:Null}" Foreground="White" FontSize="12" FontFamily="Arctic" SelectionBrush="White" VerticalAlignment="Top" HorizontalAlignment="Left" Width="91" Height="18" Background="#4CFFFFFF"/>
+        <TextBox x:Name="tbx_port" Margin="138,156,0,0" BorderBrush="{x:Null}" Foreground="White" FontSize="12" FontFamily="Arctic" SelectionBrush="White" VerticalAlignment="Top" HorizontalAlignment="Left" Width="49" Height="18" Background="#4CFFFFFF"/>
     </Grid>
 </Window>

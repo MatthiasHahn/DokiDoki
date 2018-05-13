@@ -35,8 +35,7 @@ namespace DokiDoki
             //Rooms rm = new Rooms(ServerPass, tbx_username.Text);
             //rm.Show();
             //Close();
-           
-            ServerPass = new IPEndPoint(Convert.ToInt64(tbx_serverip.Text), Convert.ToInt32(tbx_port.Text));
+                       
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
@@ -108,7 +107,7 @@ namespace DokiDoki
                 if (evuv == "01")
                 {
 
-                    Rooms rm = new Rooms(ServerPass, tbx_username.Text);
+                    Rooms rm = new Rooms(new IPEndPoint(IPAddress.Parse(tbx_serverip.Text), Convert.ToInt32(tbx_port.Text)), tbx_username.Text);
                     rm.Show();
                     Close();
                 }
