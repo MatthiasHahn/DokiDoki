@@ -34,6 +34,8 @@ namespace DokiDoki_Server
         static System.Timers.Timer CaptureLoop;
 
         static List<byte> ScreenS;
+
+        static List<string> users = new List<string>();
         static void Main(string[] args)
         {
             myEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 30L);
@@ -72,15 +74,90 @@ namespace DokiDoki_Server
 
             Capture(proc);
 
+            Task.Factory.StartNew(new Action<object>((object r_obj) => {                
+                var r = (User.RECT)r_obj;
+                TcpListener lstnr = new TcpListener(new IPEndPoint(IPAddress.Loopback, 8989));
+                lstnr.Start();
+                var clnt = lstnr.AcceptTcpClient();
+                Task.Run(() =>
+                {
+                    using (StreamReader rdr = new StreamReader(clnt.GetStream(), Encoding.UTF8, false, 4096, true))
+                    {
+                        //username
+                        string msg = "";
+                        msg = rdr.ReadLine();
+                        users.Add(msg);
+
+                        string bkmsg = "";
+                        foreach (var u in users)
+                            bkmsg += u + ";";
+
+                        using (StreamWriter wrt = new StreamWriter(clnt.GetStream(), Encoding.UTF8, 4096, true))
+                        {
+                            wrt.WriteLine(bkmsg + (users.Count == 1));
+                            wrt.Flush();
+                        }
+
+                        if (users.Count == 1)
+                        {
+                            //W;H
+                            msg = rdr.ReadLine();
+                            int width = int.Parse(msg.Split(';')[0]);
+                            int height = int.Parse(msg.Split(';')[1]);
+
+                            double own_width = System.Windows.SystemParameters.PrimaryScreenWidth;
+                            double own_height = System.Windows.SystemParameters.PrimaryScreenHeight;
+
+                            while (msg != "clnt_chg")
+                            {
+                                msg = rdr.ReadLine();
+                                double X = ConvertFuckThisToDoubleFuckMeAIDSFUCK(msg.Split(';')[0].Replace(',', '.'));
+                                double Y = ConvertFuckThisToDoubleFuckMeAIDSFUCK(msg.Split(';')[1].Replace(',', '.'));
+
+                                double X_Off = (X / width)*(own_width-r.left-r.right);
+                                double Y_Off = (Y / height)*(own_height-r.top-r.bottom);
+
+                                //X;Y
+                                LeftMouseClick((int)X_Off + r.left, (int)Y_Off + r.top);
+                            }
+                        }
+                    }
+                });
+
+            }), rect);
+
             CaptureLoop = new System.Timers.Timer();
             CaptureLoop.Interval = 32;
-            CaptureLoop.Elapsed += (sender, e) => { Send(ScreenS); };
+            CaptureLoop.Elapsed += (sender, e) => { if(ScreenS != null)
+                    Send(ScreenS);
+            };
             CaptureLoop.Start();
             while(true)
             {                
                 Capture(proc);
             } 
         }
+
+        private static double ConvertFuckThisToDoubleFuckMeAIDSFUCK(string fuck_number)
+        {
+            double fuck_Return = 0;
+            var fidf = fuck_number.Split('.');
+            int fuck_l = 0;
+            foreach (char c in fidf[0])
+                if(c != (char)65279)
+                    fuck_l++;
+            double multifuck = Math.Pow(10, fuck_l-1);
+            foreach (char c in fuck_number)
+            {
+                if (c != '.' && c != (char)65279)
+                {
+                    fuck_Return += int.Parse(c.ToString()) * multifuck;
+                    multifuck /= 10;
+                }
+            }
+            return fuck_Return;
+        }
+
         static void Capture(Process proc)
         {
             var rect = new User.RECT();
@@ -180,6 +257,22 @@ namespace DokiDoki_Server
             [DllImport("user32.dll")]
             [return: MarshalAs(UnmanagedType.AsAny)]
             public static extern void GetWindowRect(IntPtr hWnd, ref RECT rect);
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern bool SetCursorPos(int x, int y);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
+
+        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        public const int MOUSEEVENTF_LEFTUP = 0x04;
+
+        public static void LeftMouseClick(int xpos, int ypos)
+        {
+            SetCursorPos(xpos, ypos);
+            mouse_event(MOUSEEVENTF_LEFTDOWN, xpos, ypos, 0, 0);
+            mouse_event(MOUSEEVENTF_LEFTUP, xpos, ypos, 0, 0);
         }
     }
 }

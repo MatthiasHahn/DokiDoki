@@ -41,9 +41,31 @@ namespace DokiDoki
         static MemoryStream soundstrm = new MemoryStream();
         static bool played = false;
 
+        TcpClient controller_client;
         public Rooms(IPEndPoint Server, string name)
         {
             InitializeComponent();
+            var fuck_me_margin = img_disp.Margin;
+            var fuck_me_ref_height = wnd_main.Height;
+            var fuck_me_ref_width = wnd_main.Width;
+            Task.Run(() =>
+            {
+                controller_client = new TcpClient(new IPEndPoint(IPAddress.Loopback, 0));                
+                controller_client.Connect(new IPEndPoint(IPAddress.Loopback, 8989));
+                using (StreamWriter wrt = new StreamWriter(controller_client.GetStream(), Encoding.UTF8, 4096, true))
+                {
+                    wrt.WriteLine(name);
+                    wrt.Flush();
+                    using (StreamReader c_rdr = new StreamReader(controller_client.GetStream(), Encoding.UTF8, false, 4096, true))
+                    {
+                        string[] msg = c_rdr.ReadLine().Split(';');
+                        if (msg.Last().ToLower() != "true")
+                            return;
+                    }
+                    wrt.WriteLine((fuck_me_ref_width - fuck_me_margin.Left - fuck_me_margin.Right) + ";" + (fuck_me_ref_height - fuck_me_margin.Top - fuck_me_margin.Bottom));
+                    wrt.Flush();
+                }                
+            });
             Name = name;
             lbx_chat.ItemsSource = chat;
             tcpClient = new TcpClient(new IPEndPoint(IPAddress.Loopback, 0)); //IP_CHG 192.168.1.1
@@ -186,7 +208,8 @@ namespace DokiDoki
             r.HorizontalAlignment = HorizontalAlignment.Left;
             r.Margin = new Thickness(pos.X + r.Width, pos.Y + r.Height, 0, 0);
             grd_main.Children.Add(r);
-            LeftMouseClick((int)pos.X+1046+10, (int)pos.Y+201+25);
+            //LeftMouseClick((int)pos.X+1046+10, (int)pos.Y+201+25);
+            Controller_Key_Down(pos.X, pos.Y);
             //if (wnd_main.WindowState == WindowState.Normal)
             //{
             //    wnd_main.WindowState = WindowState.Maximized;
@@ -201,6 +224,15 @@ namespace DokiDoki
             //}
         }
 
+        private void Controller_Key_Down(double X, double Y)
+        {
+            using (StreamWriter wrt = new StreamWriter(controller_client.GetStream(), Encoding.UTF8, 4096, true))
+            {
+                wrt.WriteLine(X + ";" + Y);
+                wrt.Flush();
+            }
+        }
+
         private void tbx_chat_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && tbx_chat.Text != "")
@@ -208,22 +240,6 @@ namespace DokiDoki
                 chat.Add(Name + ": " + tbx_chat.Text);
                 tbx_chat.Text = "";
             }
-        }
-
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        static extern bool SetCursorPos(int x, int y);
-
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
-
-        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
-        public const int MOUSEEVENTF_LEFTUP = 0x04;
-
-        public static void LeftMouseClick(int xpos, int ypos)
-        {
-            SetCursorPos(xpos, ypos);
-            mouse_event(MOUSEEVENTF_LEFTDOWN, xpos, ypos, 0, 0);
-            mouse_event(MOUSEEVENTF_LEFTUP, xpos, ypos, 0, 0);
-        }
+        }        
     }
 }

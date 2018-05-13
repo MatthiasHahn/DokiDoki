@@ -35,9 +35,12 @@
     <Reference Include="CSCore">
       <HintPath>..\..\..\Doki_Doki_Literature_Club\cscore-master\CSCore\bin\Debug\CSCore.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
