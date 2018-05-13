@@ -27,7 +27,7 @@ namespace DokiDoki
     public partial class MainWindow : Window
     {
         public TcpClient client = new TcpClient();
-        private IPEndPoint ServerPass = new IPEndPoint(IPAddress.Loopback, 9999); //IP_CHG 192.168.1.1
+        private IPEndPoint ServerPass; //IP_CHG 192.168.1.1
         public MainWindow()
         {
             InitializeComponent();
@@ -35,13 +35,15 @@ namespace DokiDoki
             //Rooms rm = new Rooms(ServerPass, tbx_username.Text);
             //rm.Show();
             //Close();
-
+           
+            ServerPass = new IPEndPoint(Convert.ToInt64(tbx_serverip.Text), Convert.ToInt32(tbx_port.Text));
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         private void wnd_main_MouseDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
+            
         }
 
         private void ErrDisp(string msg)
