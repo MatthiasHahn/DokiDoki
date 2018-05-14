@@ -55,15 +55,19 @@ namespace DokiDoki
                 new NotifyCollectionChangedEventHandler((object sender, NotifyCollectionChangedEventArgs e) =>
                 {
                     Decorator border = VisualTreeHelper.GetChild(lbx_chat, 0) as Decorator;
-                    if (border != null)
-                    {
-                        ScrollViewer scrollViewer = border.Child as ScrollViewer;
-                        if (scrollViewer != null)
-                        {
-                            scrollViewer.ScrollToBottom();
-                        }
-                    }
-                    
+                    if (border != null && border.Child is ScrollViewer)
+                        ((ScrollViewer)border.Child).ScrollToBottom();
+
+                    //Decorator border = VisualTreeHelper.GetChild(lbx_chat, 0) as Decorator;
+                    //if (border != null)
+                    //{
+                    //    ScrollViewer scrollViewer = border.Child as ScrollViewer;
+                    //    if (scrollViewer != null)
+                    //    {
+                    //        scrollViewer.ScrollToBottom();
+                    //    }
+                    //}
+
                     foreach (var i in e.NewItems)
                         if (i.ToString().Split(':')[0] == Name)
                             sw.WriteLine(i);
