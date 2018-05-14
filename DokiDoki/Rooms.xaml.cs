@@ -63,7 +63,7 @@ namespace DokiDoki
                             scrollViewer.ScrollToBottom();
                         }
                     }
-                    //lbx_chat.ScrollIntoView(lbx_chat.Items[lbx_chat.Items.Count - 1]);            
+                    
                     foreach (var i in e.NewItems)
                         if (i.ToString().Split(':')[0] == Name)
                             sw.WriteLine(i);
